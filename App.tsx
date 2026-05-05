@@ -162,7 +162,10 @@ const App: React.FC = () => {
       tabs.push({ id: 'cart_toggle', label: 'Keranjang', icon: 'fa-shopping-basket' });
     }
 
-    if (normalizeRole(user.role) === Role.ADMIN) {
+    if (normalizeRole(user.role) === Role.ADMIN || 
+        normalizeRole(user.role) === Role.GUDANG ||
+        normalizeRole(user.role) === Role.KASIR ||
+        normalizeRole(user.role) === Role.SALES) {
       tabs.push({ id: 'admin', label: 'Admin', icon: 'fa-cog' });
     }
 
