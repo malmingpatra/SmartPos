@@ -159,32 +159,32 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
         </div>
 
         {selectedCustomerIds.length > 0 && (
-          <div className="bg-gray-900 text-white rounded-[1.5rem] p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl border border-gray-800 relative z-[200]">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <span className="text-xs font-black">{selectedCustomerIds.length}</span>
+          <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.12)] border border-gray-100 relative z-[200] animate-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-amber-100">
+                <span className="text-sm font-black">{selectedCustomerIds.length}</span>
               </div>
               <div className="text-left">
-                <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Member Terpilih</p>
-                <button type="button" onClick={() => setSelectedCustomerIds([])} className="text-[9px] text-gray-400 font-bold uppercase hover:text-white transition">Batal Pilih</button>
+                <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">Member Terpilih</p>
+                <button type="button" onClick={() => setSelectedCustomerIds([])} className="text-[9px] text-gray-400 font-bold uppercase hover:text-gray-800 transition tracking-tighter">Batalkan Pilihan</button>
               </div>
             </div>
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div className="flex gap-3 w-full sm:w-auto">
               <button 
                 type="button" 
                 disabled={isProcessing}
                 onClick={() => setShowTransferModal(true)} 
-                className={`flex-1 sm:flex-initial bg-white text-gray-900 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform cursor-pointer ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`flex-1 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md shadow-blue-100 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                <i className="fas fa-exchange-alt mr-1"></i> {isProcessing ? 'Proses...' : 'Pindahkan'}
+                <i className="fas fa-exchange-alt mr-2"></i> {isProcessing ? 'Proses...' : 'Pindahkan'}
               </button>
               <button 
                 type="button" 
                 disabled={isProcessing}
                 onClick={onBulkDeleteClick} 
-                className={`flex-1 sm:flex-initial bg-red-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-transform cursor-pointer ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`flex-1 sm:px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all hover:bg-red-100 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                <i className="fas fa-trash mr-1"></i> {isProcessing ? '...' : 'Hapus'}
+                <i className="fas fa-trash mr-2"></i> {isProcessing ? '...' : 'Hapus'}
               </button>
             </div>
           </div>
