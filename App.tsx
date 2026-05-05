@@ -147,7 +147,9 @@ const App: React.FC = () => {
     setCustomers(await supabaseService.getCustomers(user));
   };
 
-  const canUseCart = user && normalizeRole(user.role) !== Role.GUDANG;
+  const isGudang = user && normalizeRole(user.role) === Role.GUDANG;
+  const canViewCart = user && (normalizeRole(user.role) !== Role.GUDANG || isGudang);
+  const canEditCart = user && normalizeRole(user.role) !== Role.GUDANG;
 
   // Navigasi Logic for the new specific sequence
   const dockTabs = useMemo(() => {
@@ -158,7 +160,7 @@ const App: React.FC = () => {
       { id: 'history', label: 'Riwayat', icon: 'fa-history' },
     ];
     
-    if (canUseCart) {
+    if (canViewCart) {
       tabs.push({ id: 'cart_toggle', label: 'Keranjang', icon: 'fa-shopping-basket' });
     }
 
@@ -172,7 +174,7 @@ const App: React.FC = () => {
     tabs.push({ id: 'logout', label: 'Keluar', icon: 'fa-sign-out-alt' });
 
     return tabs;
-  }, [user, canUseCart]);
+  }, [user, canViewCart]);
 
   const activeTabIndex = dockTabs.findIndex(t => t.id === view);
 
@@ -284,9 +286,8 @@ const App: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        {/* GLOBAL KERANJANG DRAWER */}
         <AnimatePresence>
-          {showCart && canUseCart && (
+          {showCart && canViewCart && (
             <>
               {/* Backdrop */}
               <motion.div 
@@ -317,6 +318,7 @@ const App: React.FC = () => {
                     customers={customers}
                     onSaveCustomer={handleSaveCustomer}
                     currentUser={user!}
+                    readOnly={isGudang || false}
                   />
                 </div>
               </motion.div>
@@ -350,6 +352,7 @@ const App: React.FC = () => {
                         if (tab.id === 'logout') {
                           handleLogout();
                         } else if (tab.id === 'cart_toggle') {
+                          if (isGudang) return;
                           setShowCart(!showCart);
                         } else {
                           setView(tab.id as any); 
@@ -357,7 +360,9 @@ const App: React.FC = () => {
                           scrollContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' }); 
                         }
                       }}
-                      className="relative flex-1 flex flex-col items-center justify-center h-full transition-all duration-300 isolate group"
+                      className={`relative flex-1 flex flex-col items-center justify-center h-full transition-all duration-300 isolate group ${
+                        tab.id === 'cart_toggle' && isGudang ? 'opacity-30 grayscale cursor-not-allowed' : 'active:scale-95'
+                      }`}
                     >
                       {isActive && (
                         <motion.div 

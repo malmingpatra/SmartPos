@@ -14,9 +14,10 @@ interface KeranjangProps {
   customers: Customer[];
   onSaveCustomer: (c: Customer) => void;
   currentUser: User;
+  readOnly?: boolean;
 }
 
-const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQuantity, onRemove, onCheckout, onReset, onClose, customers, onSaveCustomer, currentUser }) => {
+const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQuantity, onRemove, onCheckout, onReset, onClose, customers, onSaveCustomer, currentUser, readOnly = false }) => {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [buyerName, setBuyerName] = useState('');
   const [buyerPhone, setBuyerPhone] = useState('');
@@ -58,9 +59,9 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
       {/* Sticky Header */}
       <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md p-4 border-b border-gray-50 flex justify-between items-center shrink-0">
         <h2 className="text-lg font-black text-gray-800 flex items-center gap-2">
-          <i className="fas fa-shopping-basket text-blue-600"></i> Keranjang
+          <i className="fas fa-shopping-basket text-blue-600"></i> {readOnly ? 'Isi Keranjang' : 'Keranjang'}
         </h2>
-        {items.length > 0 && (
+        {items.length > 0 && !readOnly && (
           <button 
             onClick={onReset} 
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider text-red-500 bg-red-50 border border-red-100 active:scale-95 transition-all shadow-sm shadow-red-50"
@@ -86,19 +87,21 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
                   <p className="text-blue-600 font-black text-[10px] mt-1">Rp{item.price.toLocaleString('id-ID')}</p>
                 </div>
                 
-                <div className="flex items-center gap-1 bg-gray-50 rounded-xl p-1 h-fit shrink-0 border border-gray-100 ml-auto">
-                  <button onClick={() => onUpdateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
+                <div className={`flex items-center gap-1 bg-gray-50 rounded-xl p-1 h-fit shrink-0 border border-gray-100 ml-auto ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}>
+                  <button onClick={() => !readOnly && onUpdateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
                     <i className="fas fa-minus text-[8px]"></i>
                   </button>
-                  <input type="number" inputMode="numeric" className="w-8 bg-transparent text-center font-black text-xs focus:outline-none text-gray-700" value={item.quantity} onChange={(e) => { const val = parseInt(e.target.value); if (!isNaN(val) && val >= 0) onSetQuantity(item.id, val); }} />
-                  <button onClick={() => onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
+                  <input type="number" inputMode="numeric" readOnly={readOnly} className="w-8 bg-transparent text-center font-black text-xs focus:outline-none text-gray-700" value={item.quantity} onChange={(e) => { if (readOnly) return; const val = parseInt(e.target.value); if (!isNaN(val) && val >= 0) onSetQuantity(item.id, val); }} />
+                  <button onClick={() => !readOnly && onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
                     <i className="fas fa-plus text-[8px]"></i>
                   </button>
                 </div>
 
-                <button onClick={() => onRemove(item.id)} className="text-gray-200 hover:text-red-400 transition-colors pl-1 shrink-0">
-                  <i className="fas fa-times-circle text-lg"></i>
-                </button>
+                {!readOnly && (
+                  <button onClick={() => onRemove(item.id)} className="text-gray-200 hover:text-red-400 transition-colors pl-1 shrink-0">
+                    <i className="fas fa-times-circle text-lg"></i>
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -115,17 +118,20 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
                 <p className="text-sm font-black text-amber-900">{selectedCustomer.name}</p>
                 <p className="text-[10px] text-amber-700">HP: {selectedCustomer.phone}</p>
               </div>
-              <button onClick={() => { setSelectedCustomer(null); setBuyerName(''); setBuyerPhone(''); }} className="text-amber-400 hover:text-amber-600">
-                <i className="fas fa-times-circle"></i>
-              </button>
+              {!readOnly && (
+                <button onClick={() => { setSelectedCustomer(null); setBuyerName(''); setBuyerPhone(''); }} className="text-amber-400 hover:text-amber-600">
+                  <i className="fas fa-times-circle"></i>
+                </button>
+              )}
             </div>
           ) : (
             <button 
-              onClick={() => setShowBuyerForm(!showBuyerForm)}
-              className="w-full flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50/50 px-4 py-2.5 rounded-xl border border-blue-100/50 hover:bg-blue-50 transition-colors"
+              disabled={readOnly}
+              onClick={() => !readOnly && setShowBuyerForm(!showBuyerForm)}
+              className={`w-full flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50/50 px-4 py-2.5 rounded-xl border border-blue-100/50 hover:bg-blue-50 transition-colors ${readOnly ? 'opacity-50 grayscale' : ''}`}
             >
               <span><i className="fas fa-user-tag mr-2 opacity-70"></i> Data Pembeli</span>
-              <i className={`fas fa-chevron-${showBuyerForm ? 'up' : 'down'} text-[8px] opacity-70`}></i>
+              {!readOnly && <i className={`fas fa-chevron-${showBuyerForm ? 'up' : 'down'} text-[8px] opacity-70`}></i>}
             </button>
           )}
           
@@ -182,7 +188,7 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
           <div className="flex items-center justify-between gap-4">
             <span className="text-[10px] font-black uppercase tracking-wider text-gray-400">Potongan (%)</span>
             <div className="relative w-24">
-              <input type="number" inputMode="numeric" placeholder="0" max="100" min="0" className="w-full px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-right text-xs font-black text-red-500 focus:bg-white focus:border-red-400 transition-all outline-none pr-7" value={discountPercent || ''} onChange={(e) => { const val = Number(e.target.value); if (val >= 0 && val <= 100) setDiscountPercent(val); }} />
+              <input type="number" inputMode="numeric" readOnly={readOnly} placeholder="0" max="100" min="0" className={`w-full px-3 py-1.5 bg-gray-50 border border-gray-100 rounded-lg text-right text-xs font-black text-red-500 focus:bg-white focus:border-red-400 transition-all outline-none pr-7 ${readOnly ? 'opacity-50' : ''}`} value={discountPercent || ''} onChange={(e) => { if (readOnly) return; const val = Number(e.target.value); if (val >= 0 && val <= 100) setDiscountPercent(val); }} />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-red-400 pointer-events-none">%</span>
             </div>
           </div>
@@ -196,18 +202,25 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
         </div>
 
         <div className="flex gap-3">
-          <button 
-            disabled={items.length === 0}
-            onClick={handleCheckout}
-            className="w-[70%] bg-blue-600 text-white h-14 rounded-2xl font-black text-xs uppercase tracking-[0.1em] disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-200 active:scale-95 transition-all"
-          >
-            <i className="fas fa-print text-sm opacity-70"></i> 
-            <span>Selesai & Cetak</span>
-          </button>
+          {!readOnly ? (
+            <button 
+              disabled={items.length === 0}
+              onClick={handleCheckout}
+              className="w-[70%] bg-blue-600 text-white h-14 rounded-2xl font-black text-xs uppercase tracking-[0.1em] disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-200 active:scale-95 transition-all"
+            >
+              <i className="fas fa-print text-sm opacity-70"></i> 
+              <span>Selesai & Cetak</span>
+            </button>
+          ) : (
+            <div className="w-[70%] bg-blue-50 text-blue-400 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border border-blue-100 opacity-60">
+              <i className="fas fa-info-circle"></i>
+              <span>Hanya Lihat</span>
+            </div>
+          )}
           
           <button 
             onClick={onClose}
-            className="w-[30%] bg-gray-100 text-gray-600 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 active:scale-95 transition-all flex items-center justify-center border border-gray-200/50"
+            className={`${readOnly ? 'w-[30%]' : 'w-[30%]'} bg-gray-100 text-gray-600 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-gray-200 active:scale-95 transition-all flex items-center justify-center border border-gray-200/50`}
           >
             Tutup
           </button>
