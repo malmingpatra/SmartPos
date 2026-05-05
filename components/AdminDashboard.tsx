@@ -41,27 +41,18 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
   return (
     <React.Fragment>
       <div className="flex flex-col gap-6 relative min-h-screen pb-48">
-        <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden shadow-sm">
-          {debugLogs.length > 0 && (
-            <div className="bg-black text-[9px] text-emerald-400 p-2 font-mono break-all opacity-80">
-              {debugLogs.map((log, i) => <div key={i}>{log}</div>)}
-            </div>
-          )}
-          <div className="p-6 pb-2 flex flex-col gap-4">
-            <div>
-              <h2 className="text-2xl font-black text-gray-800 tracking-tight">Pusat Manajemen</h2>
-              <p className="text-xs text-gray-400 font-medium">Kelola inventaris, staff, member, dan pantau performa bisnis.</p>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 rounded-full w-fit">
-              <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Administrator Mode</span>
-            </div>
-          </div>
-
-          <div className="p-4 pt-4">
-            <div className="bg-gray-100 p-1.5 rounded-2xl flex items-center relative h-12">
+        {/* Sticky Management Navigator - Balanced Box Style */}
+        <div className="sticky top-0 z-30 -mx-1 pt-1 pb-4 no-print pointer-events-none">
+          <div className="bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] pointer-events-auto transition-all duration-300">
+            {debugLogs.length > 0 && (
+              <div className="bg-black text-[9px] text-emerald-400 p-2 font-mono break-all opacity-80 rounded-lg mb-2">
+                {debugLogs.map((log, i) => <div key={i}>{log}</div>)}
+              </div>
+            )}
+            
+            <div className="bg-gray-100 p-1.5 rounded-xl flex items-center relative h-12">
               <div 
-                className="absolute bg-white rounded-xl shadow-md transition-all duration-300 ease-out z-0"
+                className="absolute bg-white rounded-lg shadow-sm transition-all duration-300 ease-out z-0"
                 style={{ 
                   top: '6px',
                   bottom: '6px',

@@ -50,25 +50,40 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
   return (
     <>
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-        <div className="flex flex-col gap-3 items-center">
-          <div className="relative flex-1 w-full">
-            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
-            <input type="text" placeholder="Cari staff..." className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-2xl focus:outline-none text-sm shadow-sm" value={userSearch} onChange={(e) => { setUserSearch(e.target.value); setUserPage(1); }} />
-          </div>
-          <div className="flex flex-col gap-2 w-full">
-            <select 
-              className="border border-gray-200 rounded-2xl px-4 py-3 bg-white text-sm focus:outline-none font-bold text-gray-600 shadow-sm"
-              value={userFilterRole}
-              onChange={(e) => { setUserFilterRole(e.target.value); setUserPage(1); }}
-            >
-              <option value="all">Semua Role</option>
-              {Object.values(Role).map(role => (
-                <option key={role} value={role}>{role}</option>
-              ))}
-            </select>
-            <button onClick={() => { setEditingUser(null); setIsFormOpen(true); }} className="w-full bg-emerald-600 text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center gap-2 text-sm shadow-lg shadow-emerald-200 active:scale-95 transition-transform">
-              <i className="fas fa-user-plus"></i> Tambah Staff
-            </button>
+        {/* Search and Filters - Refined Balanced Box Design (Floating Sticky) */}
+        <div className="sticky top-2 z-20 -mx-1 pt-1 pb-4 no-print pointer-events-none">
+          <div className="bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] flex flex-col gap-3 items-stretch pointer-events-auto transition-all duration-300">
+            <div className="relative w-full">
+              <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+              <input 
+                type="text" 
+                placeholder="Cari staf..." 
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                value={userSearch} 
+                onChange={(e) => { setUserSearch(e.target.value); setUserPage(1); }} 
+              />
+            </div>
+            <div className="flex gap-3 w-full h-11">
+              <div className="flex-[60] relative h-full">
+                <select 
+                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all font-sans"
+                  value={userFilterRole}
+                  onChange={(e) => { setUserFilterRole(e.target.value); setUserPage(1); }}
+                >
+                  <option value="all">Semua Role</option>
+                  {Object.values(Role).map(role => (
+                    <option key={role} value={role}>{role}</option>
+                  ))}
+                </select>
+                <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-[10px] pointer-events-none"></i>
+              </div>
+              <button 
+                onClick={() => { setEditingUser(null); setIsFormOpen(true); }} 
+                className="flex-[40] bg-emerald-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-emerald-100 active:scale-95 transition-all"
+              >
+                <i className="fas fa-user-plus"></i> <span className="truncate">Tambah</span>
+              </button>
+            </div>
           </div>
         </div>
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
