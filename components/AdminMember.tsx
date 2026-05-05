@@ -159,34 +159,48 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
         </div>
 
         {selectedCustomerIds.length > 0 && (
-          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-[92%] max-w-[480px] bg-white/95 backdrop-blur-xl rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 z-[200] animate-in slide-in-from-bottom-10 duration-500">
+          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-[92%] max-w-[420px] bg-white/95 backdrop-blur-xl rounded-3xl p-5 flex flex-col gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 z-[200] animate-in slide-in-from-bottom-10 duration-500">
+            {/* Header Info */}
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-amber-100">
-                <span className="text-sm font-black">{selectedCustomerIds.length}</span>
+              <div className="w-12 h-12 bg-amber-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-amber-100">
+                <span className="text-base font-black">{selectedCustomerIds.length}</span>
               </div>
               <div className="text-left">
-                <p className="text-[10px] font-black uppercase tracking-widest text-amber-600">Member Terpilih</p>
-                <button type="button" onClick={() => setSelectedCustomerIds([])} className="text-[9px] text-gray-400 font-bold uppercase hover:text-gray-800 transition tracking-tighter">Batalkan Pilihan</button>
+                <p className="text-[11px] font-black uppercase tracking-widest text-amber-600">Member Terpilih</p>
+                <button type="button" onClick={() => setSelectedCustomerIds([])} className="text-[10px] text-gray-400 font-bold uppercase hover:text-gray-800 transition tracking-tight">Batalkan Pilihan</button>
               </div>
             </div>
-            <div className="flex gap-3 w-full sm:w-auto">
+
+            {/* Action Row: Transfer */}
+            <div className="flex gap-2">
+              <div className="flex-1 relative">
+                <select 
+                  className="w-full h-11 pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-[11px] font-bold text-gray-700 shadow-sm transition-all"
+                  value={targetOwnerId}
+                  onChange={(e) => setTargetOwnerId(e.target.value)}
+                >
+                  <option value="">Pilih Staff...</option>
+                  {users.map(u => <option key={u.id} value={u.id}>{u.name}</option>)}
+                </select>
+                <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-[10px] pointer-events-none"></i>
+              </div>
               <button 
-                type="button" 
-                disabled={isProcessing}
-                onClick={() => setShowTransferModal(true)} 
-                className={`flex-1 sm:px-6 py-2.5 bg-blue-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all shadow-md shadow-blue-100 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={onBulkTransferSubmit}
+                disabled={!targetOwnerId || isProcessing}
+                className="bg-blue-600 text-white px-6 h-11 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-100 active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap disabled:opacity-50"
               >
-                <i className="fas fa-exchange-alt mr-2"></i> {isProcessing ? 'Proses...' : 'Pindahkan'}
-              </button>
-              <button 
-                type="button" 
-                disabled={isProcessing}
-                onClick={onBulkDeleteClick} 
-                className={`flex-1 sm:px-6 py-2.5 bg-red-50 text-red-600 border border-red-100 rounded-xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all hover:bg-red-100 ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
-              >
-                <i className="fas fa-trash mr-2"></i> {isProcessing ? '...' : 'Hapus'}
+                <i className="fas fa-exchange-alt"></i> Pindahkan
               </button>
             </div>
+
+            {/* Danger Action: Delete */}
+            <button 
+              onClick={onBulkDeleteClick}
+              disabled={isProcessing}
+              className="w-full h-12 bg-red-50 text-red-600 border border-red-100 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-red-100 disabled:opacity-50"
+            >
+              <i className="fas fa-trash-alt"></i> Hapus Member
+            </button>
           </div>
         )}
 
