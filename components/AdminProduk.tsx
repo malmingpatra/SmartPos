@@ -222,31 +222,38 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
         </div>
 
         {selectedProducts.size > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-in slide-in-from-top-2 shadow-sm">
-            <span className="font-bold text-blue-800 text-sm whitespace-nowrap bg-blue-100 px-3 py-1 rounded-lg">
-              <i className="fas fa-check-circle mr-2"></i> {selectedProducts.size} Dipilih
-            </span>
-            <div className="flex flex-col md:flex-row gap-2 w-full justify-end items-stretch md:items-center">
-              <div className="flex gap-2 flex-1 md:flex-none">
+          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-[92%] max-w-[520px] bg-white/95 backdrop-blur-xl rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 z-[200] animate-in slide-in-from-bottom-10 duration-500">
+            <div className="flex items-center gap-3 self-start md:self-auto">
+              <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-100">
+                <span className="text-sm font-black">{selectedProducts.size}</span>
+              </div>
+              <div className="text-left">
+                <p className="text-[10px] font-black uppercase tracking-widest text-blue-600">Produk Terpilih</p>
+                <button type="button" onClick={() => setSelectedProducts(new Set())} className="text-[9px] text-gray-400 font-bold uppercase hover:text-gray-800 transition tracking-tighter">Batalkan Pilihan</button>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto items-stretch">
+              <div className="flex gap-2">
                 <select 
-                  className="px-3 py-2 border border-blue-200 rounded-xl text-sm w-full md:w-48 outline-none focus:ring-2 ring-blue-500 font-medium bg-white"
+                  className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-[10px] font-bold w-full sm:w-32 outline-none focus:bg-white focus:border-blue-400 transition-all"
                   value={bulkCategory}
                   onChange={e => setBulkCategory(e.target.value)}
                 >
-                  <option value="" disabled>Pilih kategori...</option>
+                  <option value="" disabled>Kategori...</option>
                   {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
                 <button 
                   onClick={handleBulkCategory}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md active:scale-95 transition flex items-center gap-2 shrink-0"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-100 active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap"
                 >
                   <i className="fas fa-save"></i> Ubah
                 </button>
               </div>
-              <div className="h-px md:h-8 w-full md:w-px bg-blue-200 opacity-50 md:mx-2 hidden md:block"></div>
+              <div className="hidden sm:block w-px h-8 bg-gray-100 mx-1"></div>
               <button 
                 onClick={handleBulkDelete}
-                className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold border border-red-100 transition active:scale-95 flex items-center justify-center gap-2"
+                className="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border border-red-100 transition-all active:scale-95 flex items-center justify-center gap-2"
               >
                 <i className="fas fa-trash-alt"></i> Hapus
               </button>

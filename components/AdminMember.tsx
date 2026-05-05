@@ -159,7 +159,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
         </div>
 
         {selectedCustomerIds.length > 0 && (
-          <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.12)] border border-gray-100 relative z-[200] animate-in slide-in-from-bottom-4 duration-500">
+          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-[92%] max-w-[480px] bg-white/95 backdrop-blur-xl rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 z-[200] animate-in slide-in-from-bottom-10 duration-500">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 bg-amber-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-amber-100">
                 <span className="text-sm font-black">{selectedCustomerIds.length}</span>
