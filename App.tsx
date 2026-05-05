@@ -21,6 +21,12 @@ const App: React.FC = () => {
   const [showReceipt, setShowReceipt] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [showCart, setShowCart] = useState(false);
+  
+  // Persisted Buyer Data for Cart
+  const [buyerName, setBuyerName] = useState('');
+  const [buyerPhone, setBuyerPhone] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [isDockVisible, setIsDockVisible] = useState(true);
@@ -139,6 +145,9 @@ const App: React.FC = () => {
 
     setShowReceipt(newOrder);
     setCart([]);
+    setBuyerName('');
+    setBuyerPhone('');
+    setSelectedCustomer(null);
   };
 
   const handleSaveCustomer = async (customer: Customer) => {
@@ -312,13 +321,24 @@ const App: React.FC = () => {
                     onUpdateQuantity={updateCartQuantity} 
                     onSetQuantity={setManualQuantity}
                     onRemove={removeFromCart} 
-                    onCheckout={() => { handleCheckout(); setShowCart(false); }}
-                    onReset={() => setCart([])}
+                    onCheckout={(discount, name, phone, cid) => { handleCheckout(discount, name, phone, cid); setShowCart(false); }}
+                    onReset={() => {
+                      setCart([]);
+                      setBuyerName('');
+                      setBuyerPhone('');
+                      setSelectedCustomer(null);
+                    }}
                     onClose={() => setShowCart(false)}
                     customers={customers}
                     onSaveCustomer={handleSaveCustomer}
                     currentUser={user!}
                     readOnly={isGudang || false}
+                    buyerName={buyerName}
+                    setBuyerName={setBuyerName}
+                    buyerPhone={buyerPhone}
+                    setBuyerPhone={setBuyerPhone}
+                    selectedCustomer={selectedCustomer}
+                    setSelectedCustomer={setSelectedCustomer}
                   />
                 </div>
               </motion.div>

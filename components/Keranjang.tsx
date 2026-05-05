@@ -15,13 +15,19 @@ interface KeranjangProps {
   onSaveCustomer: (c: Customer) => void;
   currentUser: User;
   readOnly?: boolean;
+  buyerName: string;
+  setBuyerName: (name: string) => void;
+  buyerPhone: string;
+  setBuyerPhone: (phone: string) => void;
+  selectedCustomer: Customer | null;
+  setSelectedCustomer: (c: Customer | null) => void;
 }
 
-const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQuantity, onRemove, onCheckout, onReset, onClose, customers, onSaveCustomer, currentUser, readOnly = false }) => {
+const Keranjang: React.FC<KeranjangProps> = ({ 
+  items, onUpdateQuantity, onSetQuantity, onRemove, onCheckout, onReset, onClose, customers, onSaveCustomer, currentUser, readOnly = false,
+  buyerName, setBuyerName, buyerPhone, setBuyerPhone, selectedCustomer, setSelectedCustomer
+}) => {
   const [discountPercent, setDiscountPercent] = useState(0);
-  const [buyerName, setBuyerName] = useState('');
-  const [buyerPhone, setBuyerPhone] = useState('');
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [showBuyerForm, setShowBuyerForm] = useState(false);
   const [customerSearch, setCustomerSearch] = useState('');
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
@@ -47,9 +53,6 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
 
   const handleCheckout = () => {
     onCheckout(discountAmount, buyerName, buyerPhone, selectedCustomer?.id);
-    setBuyerName('');
-    setBuyerPhone('');
-    setSelectedCustomer(null);
     setDiscountPercent(0);
     setShowBuyerForm(false);
   };
@@ -136,44 +139,82 @@ const Keranjang: React.FC<KeranjangProps> = ({ items, onUpdateQuantity, onSetQua
           )}
           
           {showBuyerForm && !selectedCustomer && (
-            <div className="space-y-3 mt-3 p-3 bg-gray-50/50 rounded-xl border border-gray-100 animate-in slide-in-from-bottom-2 duration-200">
+            <div className="space-y-4 mt-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 animate-in slide-in-from-top-2 duration-200">
               <div className="relative">
-                <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1">Nama / HP Member</label>
-                <div className="flex gap-2">
-                   <input 
+                <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1 leading-none">Nama / Pencarian Member</label>
+                <div className="w-full relative">
+                  <input 
                     type="text" 
-                    placeholder="Ketik disini..." 
-                    className="flex-1 bg-white border border-gray-200 px-3 py-2 rounded-lg text-xs font-bold outline-none" 
-                    value={customerSearch} 
-                    onChange={(e) => { setCustomerSearch(e.target.value); setBuyerName(e.target.value); }} 
+                    placeholder="Ketik Nama Pembeli..." 
+                    className="w-full bg-white border border-gray-200 px-4 h-11 rounded-xl text-xs font-bold outline-none focus:border-blue-300 transition-all shadow-sm" 
+                    value={buyerName} 
+                    onChange={(e) => { 
+                      setBuyerName(e.target.value);
+                      setCustomerSearch(e.target.value); 
+                    }} 
                   />
-                  <button 
-                    onClick={() => setIsAddingCustomer(true)}
-                    className="bg-emerald-500 text-white min-w-[40px] h-9 rounded-lg text-xs font-black shadow-sm shadow-emerald-200"
-                    title="Daftar Member Baru"
-                  >
-                    <i className="fas fa-plus"></i>
-                  </button>
+                  {filteredCustomers.length > 0 && customerSearch && (
+                    <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-20 overflow-hidden divide-y divide-gray-50">
+                      {filteredCustomers.map(c => (
+                        <button 
+                          key={c.id} 
+                          onClick={() => handleSelectCustomer(c)}
+                          className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors"
+                        >
+                          <p className="text-xs font-black text-gray-800">{c.name}</p>
+                          <p className="text-[10px] text-gray-400">{c.phone}</p>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-
-                {filteredCustomers.length > 0 && (
-                  <div className="absolute left-0 right-0 bottom-full mb-2 bg-white border border-gray-200 rounded-xl shadow-2xl z-20 overflow-hidden divide-y">
-                    {filteredCustomers.map(c => (
-                      <button 
-                        key={c.id} 
-                        onClick={() => handleSelectCustomer(c)}
-                        className="w-full text-left px-4 py-3 hover:bg-blue-50 transition"
-                      >
-                        <p className="text-xs font-black text-gray-800">{c.name}</p>
-                        <p className="text-[10px] text-gray-400">{c.phone}</p>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
-              <div>
-                <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1">Nomor HP</label>
-                <input type="tel" placeholder="08..." className="w-full bg-white border border-gray-200 px-3 py-2 rounded-lg text-xs font-bold outline-none" value={buyerPhone} onChange={(e) => setBuyerPhone(e.target.value)} />
+
+              <div className="flex gap-2 items-end">
+                <div className="flex-[0.5]">
+                  <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1 leading-none text-center">Nomor HP</label>
+                  <input 
+                    type="tel" 
+                    placeholder="08..." 
+                    className="w-full bg-white border border-gray-200 px-3 h-11 rounded-xl text-xs font-bold outline-none focus:border-blue-300 transition-all shadow-sm text-center" 
+                    value={buyerPhone} 
+                    onChange={(e) => setBuyerPhone(e.target.value)} 
+                  />
+                </div>
+                <button 
+                  onClick={() => {
+                    if (buyerName && buyerPhone) {
+                      const newCust: Customer = {
+                        id: crypto.randomUUID(),
+                        name: buyerName,
+                        phone: buyerPhone,
+                        total_spent: 0,
+                        created_at: new Date().toISOString(),
+                        created_by: currentUser.id,
+                        created_by_role: normalizeRole(currentUser.role)
+                      };
+                      onSaveCustomer(newCust);
+                      setSelectedCustomer(newCust);
+                      setShowBuyerForm(false);
+                      setCustomerSearch('');
+                    }
+                  }}
+                  disabled={!buyerName || !buyerPhone}
+                  className="flex-[0.3] bg-emerald-500 text-white h-11 rounded-xl text-[8px] font-black uppercase tracking-tighter shadow-sm shadow-emerald-100 active:scale-95 transition-all disabled:opacity-30 flex items-center justify-center gap-1"
+                >
+                  <i className="fas fa-save text-[9px]"></i> Simpan
+                </button>
+                <button 
+                  onClick={() => {
+                    setBuyerName('');
+                    setBuyerPhone('');
+                    setSelectedCustomer(null);
+                    setCustomerSearch('');
+                  }}
+                  className="flex-[0.2] bg-gray-100 text-gray-400 h-11 rounded-xl text-[8px] font-black uppercase tracking-tighter shadow-sm active:scale-95 transition-all flex items-center justify-center"
+                >
+                  <i className="fas fa-undo"></i>
+                </button>
               </div>
             </div>
           )}
