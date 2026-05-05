@@ -93,7 +93,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
   const [productSearch, setProductSearch] = useState('');
   const [productFilterCategory, setProductFilterCategory] = useState('all');
 
-  const [confirmModal, setConfirmModal] = useState<{ show: boolean, id: string }>({ show: false, id: '' });
+  const [confirmModal, setConfirmModal] = useState<{ show: boolean, type: 'single' | 'bulk', id?: string }>({ show: false, type: 'single' });
 
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [bulkCategory, setBulkCategory] = useState('');
@@ -128,6 +128,11 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
     }
   };
 
+  const handleBulkDelete = () => {
+    if (selectedProducts.size === 0) return;
+    setConfirmModal({ show: true, type: 'bulk' });
+  };
+
   const filteredProducts = useMemo(() => {
     const list = products.filter(p => {
       const matchesSearch = p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
@@ -145,20 +150,34 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
 
   const handleDeleteProduct = (id: string) => { 
     addLog("Pencet tombol hapus produk id: " + id);
-    setConfirmModal({ show: true, id });
+    setConfirmModal({ show: true, type: 'single', id });
   };
 
   const processDelete = async () => {
-    const { id } = confirmModal;
-    setConfirmModal({ show: false, id: '' });
-    addLog(`Memproses hapus produk...`);
-    try {
-      await supabaseService.deleteProduct(id);
-      onProductsChange();
-      addLog(`Berhasil hapus produk`);
-    } catch (err: any) {
-      addLog(`Gagal hapus produk: ${err.message}`);
-      alert(`Gagal menghapus: ${err.message}`);
+    const { type, id } = confirmModal;
+    setConfirmModal({ show: false, type: 'single' });
+    
+    if (type === 'single' && id) {
+      addLog(`Memproses hapus produk...`);
+      try {
+        await supabaseService.deleteProduct(id);
+        onProductsChange();
+        addLog(`Berhasil hapus produk`);
+      } catch (err: any) {
+        addLog(`Gagal hapus produk: ${err.message}`);
+        alert(`Gagal menghapus: ${err.message}`);
+      }
+    } else if (type === 'bulk') {
+      addLog(`Memproses hapus bulk ${selectedProducts.size} produk...`);
+      try {
+        await supabaseService.bulkDeleteProducts(Array.from(selectedProducts));
+        onProductsChange();
+        setSelectedProducts(new Set());
+        addLog(`Berhasil hapus bulk produk`);
+      } catch (err: any) {
+        addLog(`Gagal hapus bulk produk: ${err.message}`);
+        alert(`Gagal menghapus bulk: ${err.message}`);
+      }
     }
   };
 
@@ -224,6 +243,13 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
                   <i className="fas fa-save"></i> Ubah
                 </button>
               </div>
+              <div className="h-px md:h-8 w-full md:w-px bg-blue-200 opacity-50 md:mx-2 hidden md:block"></div>
+              <button 
+                onClick={handleBulkDelete}
+                className="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-sm font-bold border border-red-100 transition active:scale-95 flex items-center justify-center gap-2"
+              >
+                <i className="fas fa-trash-alt"></i> Hapus
+              </button>
             </div>
           </div>
         )}
@@ -308,10 +334,16 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
             <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto">
               <i className="fas fa-exclamation-triangle"></i>
             </div>
-            <h2 className="text-xl font-black text-center text-gray-800 mb-2 tracking-tight">Konfirmasi Hapus</h2>
-            <p className="text-center text-gray-400 text-xs font-bold uppercase tracking-widest mb-8">Data akan dihapus permanen dari sistem.</p>
+            <h2 className="text-xl font-black text-center text-gray-800 mb-2 tracking-tight">
+              {confirmModal.type === 'bulk' ? `Hapus ${selectedProducts.size} Produk` : 'Konfirmasi Hapus'}
+            </h2>
+            <p className="text-center text-gray-400 text-xs font-bold uppercase tracking-widest mb-8">
+              {confirmModal.type === 'bulk' 
+                ? 'Semua produk terpilih akan dihapus permanen.' 
+                : 'Data akan dihapus permanen dari sistem.'}
+            </p>
             <div className="flex gap-3">
-              <button onClick={() => setConfirmModal({ show: false, id: '' })} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
+              <button onClick={() => setConfirmModal({ show: false, type: 'single' })} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
               <button onClick={processDelete} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-red-100">Ya, Hapus</button>
             </div>
           </div>
