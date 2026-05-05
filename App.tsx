@@ -185,9 +185,9 @@ const App: React.FC = () => {
   return (
     <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative">
       {/* 4. REFINED BOX GLASS HEADER */}
-      <header className="fixed top-0 left-0 right-0 z-40 no-print p-3 pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-40 no-print p-2 pointer-events-none">
         <div className="max-w-5xl mx-auto w-full pointer-events-auto">
-          <div className="bg-white/95 backdrop-blur-md border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] px-5 py-3 rounded-2xl flex items-center justify-between">
+          <div className="bg-white/95 backdrop-blur-md border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] px-5 py-2.5 rounded-2xl flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100">
@@ -243,7 +243,7 @@ const App: React.FC = () => {
       <main 
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto p-4 pt-24 no-print scroll-smooth relative"
+        className="flex-1 overflow-auto p-4 pt-20 no-print scroll-smooth relative"
       >
         <AnimatePresence mode="wait">
           <motion.div 
@@ -252,7 +252,7 @@ const App: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="max-w-7xl mx-auto w-full pt-4"
+            className="max-w-7xl mx-auto w-full pt-1"
           >
             {view === 'catalog' && (
               <div className="flex flex-col gap-4 pb-24 relative">

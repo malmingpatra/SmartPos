@@ -49,9 +49,9 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
   const canSeeStaffFilter = userRole === Role.ADMIN || userRole === Role.GUDANG;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Search and Filters - Refined Balanced Box Design (Floating Sticky) */}
-      <div className="sticky top-0 z-20 -mx-1 pt-1 pb-4 no-print pointer-events-none">
+      <div className="sticky top-0 z-20 -mx-1 pt-0.5 pb-2 no-print pointer-events-none">
         <div className="bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] flex flex-col gap-3 items-stretch pointer-events-auto transition-all duration-300">
           <div className="relative w-full">
             <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>

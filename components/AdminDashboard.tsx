@@ -40,9 +40,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
 
   return (
     <React.Fragment>
-      <div className="flex flex-col gap-6 relative min-h-screen pb-48">
+      <div className="flex flex-col gap-4 relative min-h-screen pb-32">
         {/* Sticky Management Navigator - Balanced Box Style */}
-        <div className="sticky top-0 z-30 -mx-1 pt-1 pb-4 no-print pointer-events-none">
+        <div className="sticky top-0 z-30 -mx-1 pt-0.5 pb-2 no-print pointer-events-none">
           <div className="bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] pointer-events-auto transition-all duration-300">
             {debugLogs.length > 0 && (
               <div className="bg-black text-[9px] text-emerald-400 p-2 font-mono break-all opacity-80 rounded-lg mb-2">
