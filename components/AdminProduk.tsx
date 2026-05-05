@@ -222,11 +222,11 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
         </div>
 
         {selectedProducts.size > 0 && (
-          <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-gray-900/95 backdrop-blur-xl p-1.5 rounded-2xl border border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.4)] z-[200] animate-in fade-in slide-in-from-bottom-10 duration-500">
+          <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-white/95 backdrop-blur-xl p-1 rounded-xl border border-gray-100 shadow-[0_15px_40px_rgba(59,130,246,0.15)] z-[200] animate-in fade-in slide-in-from-right-5 duration-300">
             {/* Category Selection Dropdown */}
             <div className="relative group">
               <select 
-                className="w-12 h-12 bg-gray-800/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-blue-500 text-[10px] font-bold text-transparent transition-all cursor-pointer"
+                className="w-10 h-10 bg-blue-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-blue-300 text-[10px] font-bold text-transparent transition-all cursor-pointer"
                 value={bulkCategory}
                 onChange={e => setBulkCategory(e.target.value)}
                 title="Pilih Kategori Baru"
@@ -234,8 +234,8 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
                 <option value="" disabled>Kategori...</option>
                 {categories.map(cat => <option key={cat} value={cat} className="text-gray-900">{cat}</option>)}
               </select>
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400 group-hover:text-blue-400 transition-colors">
-                <i className="fas fa-tag text-sm"></i>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-blue-500 group-hover:text-blue-700 transition-colors">
+                <i className="fas fa-tag text-xs"></i>
               </div>
             </div>
 
@@ -243,32 +243,32 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
             <button 
               onClick={handleBulkCategory}
               disabled={!bulkCategory}
-              className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
               title="Ubah Kategori Produk"
             >
-              <i className="fas fa-save text-sm"></i>
+              <i className="fas fa-save text-xs"></i>
             </button>
 
             {/* Delete Action */}
             <button 
               onClick={handleBulkDelete}
-              className="w-12 h-12 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl flex items-center justify-center active:scale-90 transition-all hover:bg-red-500 hover:text-white disabled:opacity-30"
+              className="w-10 h-10 bg-red-50 text-red-500 border border-red-100 rounded-lg flex items-center justify-center active:scale-90 transition-all hover:bg-red-500 hover:text-white disabled:opacity-30"
               title="Hapus Produk"
             >
-              <i className="fas fa-trash-alt text-sm"></i>
+              <i className="fas fa-trash-alt text-xs"></i>
             </button>
 
-            <div className="h-px bg-gray-800 mx-2 my-0.5"></div>
+            <div className="h-px bg-gray-100 mx-1.5 my-0.5"></div>
 
             {/* Count Badge (Click to Cancel) */}
             <button 
               onClick={() => setSelectedProducts(new Set())}
-              className="w-12 h-12 bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-lg active:scale-95 transition-all group relative overflow-hidden"
+              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-blue-200 active:scale-95 transition-all group relative overflow-hidden"
               title="Klik untuk Batalkan Pilihan"
             >
-              <span className="text-sm font-black group-hover:hidden">{selectedProducts.size}</span>
-              <i className="fas fa-times text-xs hidden group-hover:block"></i>
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <span className="text-[10px] font-black group-hover:hidden">{selectedProducts.size}</span>
+              <i className="fas fa-times text-[10px] hidden group-hover:block"></i>
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </div>
         )}
