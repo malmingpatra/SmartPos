@@ -172,10 +172,10 @@ const Keranjang: React.FC<KeranjangProps> = ({
 
               <div className="flex gap-2 items-end">
                 <div className="flex-[0.5]">
-                  <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1 leading-none text-center">Nomor HP</label>
+                  <label className="block text-[9px] font-black text-gray-400 uppercase mb-1.5 ml-1 leading-none text-left">Nomor Hp (Opsional)</label>
                   <input 
                     type="tel" 
-                    placeholder="08..." 
+                    placeholder="088855556666" 
                     className="w-full bg-white border border-gray-200 px-3 h-11 rounded-xl text-xs font-bold outline-none focus:border-blue-300 transition-all shadow-sm text-center" 
                     value={buyerPhone} 
                     onChange={(e) => setBuyerPhone(e.target.value)} 
@@ -200,9 +200,10 @@ const Keranjang: React.FC<KeranjangProps> = ({
                     }
                   }}
                   disabled={!buyerName || !buyerPhone}
-                  className="flex-[0.3] bg-emerald-500 text-white h-11 rounded-xl text-[8px] font-black uppercase tracking-tighter shadow-sm shadow-emerald-100 active:scale-95 transition-all disabled:opacity-30 flex items-center justify-center gap-1"
+                  className="flex-[0.3] bg-emerald-500 text-white h-11 rounded-xl font-black uppercase tracking-tighter shadow-sm shadow-emerald-100 active:scale-95 transition-all disabled:opacity-30 flex flex-col items-center justify-center gap-0"
                 >
-                  <i className="fas fa-save text-[9px]"></i> Simpan
+                  <span className="text-[9px]">SIMPAN</span>
+                  <span className="text-[7px] opacity-80 leading-none">(Opsional)</span>
                 </button>
                 <button 
                   onClick={() => {
