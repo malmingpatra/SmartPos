@@ -222,45 +222,53 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
         </div>
 
         {selectedProducts.size > 0 && (
-          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 w-[92%] max-w-[420px] bg-white/95 backdrop-blur-xl rounded-3xl p-5 flex flex-col gap-4 shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-gray-100 z-[200] animate-in slide-in-from-bottom-10 duration-500">
-            {/* Header Info */}
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
-                <span className="text-base font-black">{selectedProducts.size}</span>
-              </div>
-              <div className="text-left">
-                <p className="text-[11px] font-black uppercase tracking-widest text-blue-600">Produk Terpilih</p>
-                <button type="button" onClick={() => setSelectedProducts(new Set())} className="text-[10px] text-gray-400 font-bold uppercase hover:text-gray-800 transition tracking-tight">Batalkan Pilihan</button>
-              </div>
-            </div>
-            
-            {/* Action Row: Category Change */}
-            <div className="flex gap-2">
-              <div className="flex-1 relative">
-                <select 
-                  className="w-full h-11 pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-[11px] font-bold text-gray-700 shadow-sm transition-all"
-                  value={bulkCategory}
-                  onChange={e => setBulkCategory(e.target.value)}
-                >
-                  <option value="" disabled>Kategori...</option>
-                  {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                </select>
-                <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-[10px] pointer-events-none"></i>
-              </div>
-              <button 
-                onClick={handleBulkCategory}
-                className="bg-blue-600 text-white px-6 h-11 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-100 active:scale-95 transition-all flex items-center gap-2 whitespace-nowrap"
+          <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-gray-900/95 backdrop-blur-xl p-1.5 rounded-2xl border border-gray-800 shadow-[0_20px_50px_rgba(0,0,0,0.4)] z-[200] animate-in fade-in slide-in-from-bottom-10 duration-500">
+            {/* Category Selection Dropdown */}
+            <div className="relative group">
+              <select 
+                className="w-12 h-12 bg-gray-800/50 border border-transparent rounded-xl appearance-none focus:outline-none focus:border-blue-500 text-[10px] font-bold text-transparent transition-all cursor-pointer"
+                value={bulkCategory}
+                onChange={e => setBulkCategory(e.target.value)}
+                title="Pilih Kategori Baru"
               >
-                <i className="fas fa-save"></i> Ubah
-              </button>
+                <option value="" disabled>Kategori...</option>
+                {categories.map(cat => <option key={cat} value={cat} className="text-gray-900">{cat}</option>)}
+              </select>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400 group-hover:text-blue-400 transition-colors">
+                <i className="fas fa-tag text-sm"></i>
+              </div>
             </div>
 
-            {/* Danger Action Row: Bulk Delete */}
+            {/* Save/Change Action */}
+            <button 
+              onClick={handleBulkCategory}
+              disabled={!bulkCategory}
+              className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              title="Ubah Kategori Produk"
+            >
+              <i className="fas fa-save text-sm"></i>
+            </button>
+
+            {/* Delete Action */}
             <button 
               onClick={handleBulkDelete}
-              className="w-full h-12 bg-red-50 text-red-600 border border-red-100 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all hover:bg-red-100"
+              className="w-12 h-12 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl flex items-center justify-center active:scale-90 transition-all hover:bg-red-500 hover:text-white disabled:opacity-30"
+              title="Hapus Produk"
             >
-              <i className="fas fa-trash-alt"></i> Hapus Produk
+              <i className="fas fa-trash-alt text-sm"></i>
+            </button>
+
+            <div className="h-px bg-gray-800 mx-2 my-0.5"></div>
+
+            {/* Count Badge (Click to Cancel) */}
+            <button 
+              onClick={() => setSelectedProducts(new Set())}
+              className="w-12 h-12 bg-blue-600 text-white rounded-xl flex flex-col items-center justify-center shadow-lg active:scale-95 transition-all group relative overflow-hidden"
+              title="Klik untuk Batalkan Pilihan"
+            >
+              <span className="text-sm font-black group-hover:hidden">{selectedProducts.size}</span>
+              <i className="fas fa-times text-xs hidden group-hover:block"></i>
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             </button>
           </div>
         )}
