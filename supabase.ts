@@ -309,6 +309,25 @@ export const supabaseService = {
     }
   },
 
+  updateUserPin: async (userId: string, newPin: string): Promise<void> => {
+    // Optimistic cache update
+    const users = getLocalCache('pos_users') || [];
+    const index = users.findIndex((u: any) => u.id === userId);
+    if (index > -1) {
+      users[index].pin = newPin;
+      updateLocalCache('pos_users', users);
+    }
+
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('users').update({ pin: newPin }).eq('id', userId);
+      if (error) throw error;
+    } catch (err: any) {
+      console.error("Gagal updateUserPin:", err);
+      throw new Error(err.message || "Gagal memperbarui PIN di server.");
+    }
+  },
+
   getCustomers: async (user: User): Promise<Customer[]> => {
     let allCustomers = getLocalCache('pos_customers') || [];
     

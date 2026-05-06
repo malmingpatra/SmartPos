@@ -33,6 +33,10 @@ const App: React.FC = () => {
   const [showContactLinks, setShowContactLinks] = useState(false);
   const [contactLinks, setContactLinks] = useState<ContactLink[]>([]);
   
+  const [isChangePinOpen, setIsChangePinOpen] = useState(false);
+  const [newPin, setNewPin] = useState('');
+  const [isUpdatingPin, setIsUpdatingPin] = useState(false);
+
   const [isDockVisible, setIsDockVisible] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const lastScrollY = useRef(0);
@@ -94,6 +98,22 @@ const App: React.FC = () => {
     setUser(null);
     setView('catalog');
     setCart([]);
+  };
+
+  const handleUpdatePin = async () => {
+    if (!user || newPin.length < 3) return;
+    setIsUpdatingPin(true);
+    try {
+      await supabaseService.updateUserPin(user.id, newPin);
+      setUser({ ...user, pin: newPin });
+      setIsChangePinOpen(false);
+      setNewPin('');
+      alert('PIN Berhasil Diperbarui!');
+    } catch (err) {
+      alert('Gagal memperbarui PIN');
+    } finally {
+      setIsUpdatingPin(false);
+    }
   };
 
   const addToCart = (product: Product) => {
@@ -240,13 +260,19 @@ const App: React.FC = () => {
                 <i className="fas fa-headset text-sm group-hover:rotate-12 transition-transform"></i>
               </button>
               {user && (
-                <div className="flex flex-col justify-center items-start">
-                  <span className="text-[9px] font-black uppercase text-blue-500 tracking-[0.1em] leading-none mb-1">
+                <div className="flex flex-col items-start gap-1">
+                  <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest border border-blue-100 bg-blue-50 text-blue-600 leading-none`}>
                     {user.role}
                   </span>
-                  <h1 className="text-sm font-black text-gray-800 tracking-tight leading-none">
+                  <button 
+                    onClick={() => {
+                      setNewPin(user.pin);
+                      setIsChangePinOpen(true);
+                    }}
+                    className="px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-tight bg-gray-50 text-gray-800 border border-gray-200 hover:bg-white active:scale-95 transition-all shadow-sm leading-none"
+                  >
                     {user.name}
-                  </h1>
+                  </button>
                 </div>
               )}
             </div>
@@ -377,6 +403,74 @@ const App: React.FC = () => {
           )}
         </AnimatePresence>
       </main>
+
+      {/* Modal Ganti PIN */}
+      <AnimatePresence>
+        {isChangePinOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsChangePinOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative bg-white w-full max-w-sm rounded-[2rem] p-8 shadow-2xl border border-gray-100 overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
+              
+              <div className="mb-6 text-center">
+                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100">
+                  <i className="fas fa-key text-xl"></i>
+                </div>
+                <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">Ganti PIN</h3>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Masukkan PIN baru Anda</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
+                  <input 
+                    type="text" 
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                    placeholder="Min 3 Digit"
+                    className="bg-transparent text-2xl text-center w-full focus:outline-none font-black tracking-[0.3em] text-blue-600 placeholder:text-gray-200"
+                    maxLength={12}
+                    autoFocus
+                  />
+                </div>
+
+                <div className="flex gap-3">
+                  <button 
+                    onClick={() => setIsChangePinOpen(false)}
+                    className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-gray-400 border border-gray-100 hover:bg-gray-50 transition-all active:scale-95"
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    disabled={newPin.length < 3 || isUpdatingPin}
+                    onClick={handleUpdatePin}
+                    className="flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-blue-600 text-white shadow-lg shadow-blue-200 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    {isUpdatingPin ? (
+                       <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    ) : (
+                      <i className="fas fa-save"></i>
+                    )}
+                    Simpan PIN
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* 4. REFINED BOX GLASS NAVIGATION BAR - Only when logged in */}
       <AnimatePresence>
