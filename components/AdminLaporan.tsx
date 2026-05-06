@@ -148,81 +148,65 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   }, []);
 
   const renderReportContent = () => (
-    <table className="font-mono text-[10pt] leading-tight p-4 text-black w-full" style={{ width: '100%' }}>
-      <thead>
-        <tr>
-          <td>
-            <div className="text-center mb-6">
-              <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
-              <p className="text-[10pt]">{getReportDate()}</p>
-              <div className="h-px bg-black w-full my-2"></div>
-            </div>
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            {/* Bagian 1: PENJUALAN KOTOR */}
-            <div className="mb-6">
-              <h2 className="font-bold text-sm mb-3">DAFTAR PENJUALAN KOTOR</h2>
-              <div className="space-y-3">
-                {stats.detailedProducts.map((p, idx) => (
-                  <div key={idx} className="space-y-1">
-                    <div className="font-bold uppercase">{p.name}</div>
-                    <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
-                      <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
-                      <span className="w-1/3 text-center">x{p.quantity}</span>
-                      <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
-                    </div>
-                  </div>
-                ))}
+    <div className="font-mono text-[10pt] leading-tight text-black w-full relative">
+      <div className="hidden print:block fixed bottom-0 right-0 text-[8pt] opacity-50 bg-white">
+        ID: {printIdPrefix}
+      </div>
+      <div className="text-center mb-6">
+        <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
+        <p className="text-[10pt]">{getReportDate()}</p>
+        <div className="h-px bg-black w-full my-2"></div>
+      </div>
+      <div>
+        {/* Bagian 1: PENJUALAN KOTOR */}
+        <div className="mb-6">
+          <h2 className="font-bold text-sm mb-3">DAFTAR PENJUALAN KOTOR</h2>
+          <div className="space-y-3">
+            {stats.detailedProducts.map((p, idx) => (
+              <div key={idx} className="space-y-1">
+                <div className="font-bold uppercase">{p.name}</div>
+                <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                  <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
+                  <span className="w-1/3 text-center">x{p.quantity}</span>
+                  <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
+                </div>
               </div>
-              <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold">
-                <span className="uppercase">TOTAL PENJUALAN KOTOR</span>
-                <span>Rp {stats.total_gross_revenue.toLocaleString()}</span>
-              </div>
-            </div>
+            ))}
+          </div>
+          <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold">
+            <span className="uppercase">TOTAL PENJUALAN KOTOR</span>
+            <span>Rp {stats.total_gross_revenue.toLocaleString()}</span>
+          </div>
+        </div>
 
-            {/* Bagian 2: RINCIAN DISKON */}
-            <div className="mb-6 mt-8">
-              <h2 className="font-bold text-sm mb-3">RINCIAN DISKON</h2>
-              <div className="space-y-2">
-                {stats.discountedOrders.length > 0 ? stats.discountedOrders.map((o, idx) => (
-                  <div key={idx} className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
-                    <span>{o.receipt_number}</span>
-                    <span className="text-right text-red-600">- Rp {o.discount.toLocaleString()}</span>
-                  </div>
-                )) : (
-                  <div className="text-gray-500 italic pb-1">Tidak ada diskon</div>
-                )}
+        {/* Bagian 2: RINCIAN DISKON */}
+        <div className="mb-6 mt-8">
+          <h2 className="font-bold text-sm mb-3">RINCIAN DISKON</h2>
+          <div className="space-y-2">
+            {stats.discountedOrders.length > 0 ? stats.discountedOrders.map((o, idx) => (
+              <div key={idx} className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                <span>{o.receipt_number}</span>
+                <span className="text-right text-red-600">- Rp {o.discount.toLocaleString()}</span>
               </div>
-              <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold text-red-600">
-                <span className="uppercase">TOTAL DISKON</span>
-                <span>- Rp {stats.total_discount.toLocaleString()}</span>
-              </div>
-            </div>
+            )) : (
+              <div className="text-gray-500 italic pb-1">Tidak ada diskon</div>
+            )}
+          </div>
+          <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold text-red-600">
+            <span className="uppercase">TOTAL DISKON</span>
+            <span>- Rp {stats.total_discount.toLocaleString()}</span>
+          </div>
+        </div>
 
-            {/* Bagian 3: PENDAPATAN BERSIH */}
-            <div className="mb-4 mt-8 border-t-2 border-double border-black pt-2 flex flex-col">
-              <div className="flex justify-between items-center text-base font-black uppercase">
-                <span>PENDAPATAN BERSIH</span>
-                <span>Rp {stats.total_revenue.toLocaleString()}</span>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td>
-            <div className="text-right text-[8pt] opacity-50 mt-[50px]">
-              ID: {printIdPrefix}
-            </div>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
+        {/* Bagian 3: PENDAPATAN BERSIH */}
+        <div className="mb-4 mt-8 border-t-2 border-double border-black pt-2 flex flex-col">
+          <div className="flex justify-between items-center text-base font-black uppercase">
+            <span>PENDAPATAN BERSIH</span>
+            <span>Rp {stats.total_revenue.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   return (
