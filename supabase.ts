@@ -1,7 +1,13 @@
 
 import { createClient } from '@supabase/supabase-js';
-import { Product, User, Order, Customer, Role, normalizeRole } from './types';
+import { Product, User, Order, Customer, Role, normalizeRole, ContactLink } from './types';
 import { INITIAL_PRODUCTS, INITIAL_USERS } from './constants';
+
+const INITIAL_CONTACT_LINKS: ContactLink[] = [
+  { id: '00000000-0000-0000-0000-000000000001', name: 'WhatsApp', icon: 'fab fa-whatsapp', url: 'https://wa.me/628123456789', color: '#25D366', order: 1 },
+  { id: '00000000-0000-0000-0000-000000000002', name: 'Instagram', icon: 'fab fa-instagram', url: 'https://instagram.com/mypos', color: '#E4405F', order: 2 },
+  { id: '00000000-0000-0000-0000-000000000003', name: 'Website', icon: 'fas fa-globe', url: 'https://mypos.com', color: '#3B82F6', order: 3 },
+];
 
 const SUPABASE_URL = (import.meta as any).env?.VITE_SUPABASE_URL || '';
 const SUPABASE_ANON_KEY = (import.meta as any).env?.VITE_SUPABASE_ANON_KEY || '';
@@ -30,6 +36,9 @@ const initStorage = () => {
   }
   if (!localStorage.getItem('pos_customers')) {
     updateLocalCache('pos_customers', []);
+  }
+  if (!localStorage.getItem('pos_contact_links')) {
+    updateLocalCache('pos_contact_links', INITIAL_CONTACT_LINKS);
   }
 };
 
@@ -428,6 +437,47 @@ export const supabaseService = {
         }
       }
       return cached;
+    }
+  },
+
+  getContactLinks: async (): Promise<ContactLink[]> => {
+    if (!supabase) return (getLocalCache('pos_contact_links') || []).sort((a: any, b: any) => a.order - b.order);
+    try {
+      const { data, error } = await supabase.from('contact_links').select('*').order('order');
+      if (error) throw error;
+      updateLocalCache('pos_contact_links', data);
+      return data as ContactLink[];
+    } catch (err) {
+      return (getLocalCache('pos_contact_links') || []).sort((a: any, b: any) => a.order - b.order);
+    }
+  },
+
+  saveContactLink: async (link: ContactLink): Promise<void> => {
+    const links = getLocalCache('pos_contact_links') || [];
+    const index = links.findIndex((l: any) => l.id === link.id);
+    if (index > -1) links[index] = link;
+    else links.push(link);
+    updateLocalCache('pos_contact_links', links);
+
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('contact_links').upsert(link);
+      if (error) console.warn('Supabase save error (falling back to local):', error.message);
+    } catch (err) {
+      console.warn('Supabase connection error:', err);
+    }
+  },
+
+  deleteContactLink: async (id: string): Promise<void> => {
+    const links = (getLocalCache('pos_contact_links') || []).filter((l: any) => l.id !== id);
+    updateLocalCache('pos_contact_links', links);
+
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('contact_links').delete().eq('id', id);
+      if (error) console.warn('Supabase delete error (falling back to local):', error.message);
+    } catch (err) {
+      console.warn('Supabase connection error:', err);
     }
   }
 };

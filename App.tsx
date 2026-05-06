@@ -10,6 +10,8 @@ import Keranjang from './components/Keranjang';
 import AdminDashboard from './components/AdminDashboard';
 import Riwayat from './components/Riwayat';
 import Struk from './components/Struk';
+import ContactLinksModal from './components/ContactLinksModal';
+import { ContactLink } from './types';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -28,6 +30,8 @@ const App: React.FC = () => {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showContactLinks, setShowContactLinks] = useState(false);
+  const [contactLinks, setContactLinks] = useState<ContactLink[]>([]);
   
   const [isDockVisible, setIsDockVisible] = useState(true);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -37,8 +41,12 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const prods = await supabaseService.getProducts();
+      const [prods, links] = await Promise.all([
+        supabaseService.getProducts(),
+        supabaseService.getContactLinks()
+      ]);
       setProducts(prods);
+      setContactLinks(links);
       setLoading(false);
     };
     loadData();
@@ -215,14 +223,22 @@ const App: React.FC = () => {
   return (
     <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative print:h-auto print:overflow-visible print:static">
       {/* 4. REFINED BOX GLASS HEADER */}
+      <ContactLinksModal 
+        isOpen={showContactLinks} 
+        onClose={() => setShowContactLinks(false)} 
+        links={contactLinks} 
+      />
       <header className="fixed top-0 left-0 right-0 z-40 no-print p-2 pointer-events-none">
         <div className="max-w-5xl mx-auto w-full pointer-events-auto">
           <div className="bg-white/95 backdrop-blur-md border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] px-5 py-2.5 rounded-2xl flex items-center justify-between">
-            {/* Logo Section */}
+            {/* Logo Section (Changed to Customer Service Icon) */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100 shrink-0">
-                <i className="fas fa-cash-register text-sm"></i>
-              </div>
+              <button 
+                onClick={() => setShowContactLinks(true)}
+                className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100 shrink-0 hover:bg-blue-700 active:scale-95 transition-all group"
+              >
+                <i className="fas fa-headset text-sm group-hover:rotate-12 transition-transform"></i>
+              </button>
               {user && (
                 <div className="flex flex-col justify-center items-start">
                   <span className="text-[9px] font-black uppercase text-blue-500 tracking-[0.1em] leading-none mb-1">

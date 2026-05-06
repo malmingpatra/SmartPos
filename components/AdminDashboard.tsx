@@ -5,6 +5,7 @@ import AdminProduk from './AdminProduk';
 import AdminStaf from './AdminStaf';
 import AdminMember from './AdminMember';
 import AdminLaporan from './AdminLaporan';
+import AdminSupport from './AdminSupport';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Notification {
@@ -26,7 +27,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
   const userRole = normalizeRole(currentUser.role);
   
   const allowedTabs = useMemo(() => {
-    if (userRole === Role.ADMIN) return ['products', 'users', 'customers', 'reports'];
+    if (userRole === Role.ADMIN) return ['products', 'users', 'customers', 'reports', 'support'];
     if (userRole === Role.MANAGER) return ['products', 'customers', 'reports'];
     if (userRole === Role.GUDANG_MASTER) return ['products'];
     if (userRole === Role.GUDANG) return ['products'];
@@ -34,7 +35,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
     return [];
   }, [userRole]);
 
-  const [activeTab, setActiveTab] = useState<'products' | 'users' | 'customers' | 'reports'>(allowedTabs[0] as any || 'products');
+  const [activeTab, setActiveTab] = useState<'products' | 'users' | 'customers' | 'reports' | 'support'>(allowedTabs[0] as any || 'products');
   const [users, setUsers] = useState<User[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const notificationTimeoutRef = useRef<{ [key: string]: NodeJS.Timeout }>({});
@@ -167,6 +168,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
                 <span className="text-[8px] font-black uppercase tracking-tighter">Laporan</span>
               </button>
             )}
+            {allowedTabs.includes('support') && (
+              <button onClick={() => setActiveTab('support')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'support' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+                <i className="fas fa-headset text-sm"></i>
+                <span className="text-[8px] font-black uppercase tracking-tighter">Support</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -191,6 +198,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
 
           {activeTab === 'reports' && (
             <AdminLaporan orders={orders} />
+          )}
+
+          {activeTab === 'support' && (
+            <AdminSupport addLog={addLog} />
           )}
         </div>
       </div>

@@ -78,3 +78,19 @@ CREATE POLICY "Allow public select on orders" ON "public"."orders" FOR SELECT US
 CREATE POLICY "Allow public insert on orders" ON "public"."orders" FOR INSERT WITH CHECK (true);
 CREATE POLICY "Allow public update on orders" ON "public"."orders" FOR UPDATE USING (true);
 CREATE POLICY "Allow public delete on orders" ON "public"."orders" FOR DELETE USING (true);
+
+-- 5. Table: contact_links
+CREATE TABLE "public"."contact_links" (
+    "id" uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
+    "name" text NOT NULL,
+    "icon" text NOT NULL,
+    "url" text NOT NULL,
+    "color" text NOT NULL,
+    "order" integer NOT NULL DEFAULT 0
+);
+
+ALTER TABLE "public"."contact_links" ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public select on contact_links" ON "public"."contact_links" FOR SELECT USING (true);
+CREATE POLICY "Allow public insert on contact_links" ON "public"."contact_links" FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update on contact_links" ON "public"."contact_links" FOR UPDATE USING (true);
+CREATE POLICY "Allow public delete on contact_links" ON "public"."contact_links" FOR DELETE USING (true);

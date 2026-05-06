@@ -79,3 +79,12 @@ export interface SalesReport {
   avg_order_value: number;
   user_stats: { [userName: string]: number };
 }
+
+export interface ContactLink {
+  id: string;
+  name: string;
+  icon: string;
+  url: string;
+  color: string;
+  order: number;
+}
