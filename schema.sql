@@ -7,8 +7,7 @@ CREATE TABLE "public"."users" (
     "name" text NOT NULL,
     "username" text NOT NULL UNIQUE,
     "pin" text NOT NULL,
-    "role" text NOT NULL,
-    "avatar" text
+    "role" text NOT NULL
 );
 
 -- 2. Table: products
