@@ -219,7 +219,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
           <tr>
             <td>
               <div className="text-right text-[8pt] opacity-50 mt-[50px]">
-                ID: {printIdPrefix}-<span className="page-counter"></span>
+                ID: {printIdPrefix}
               </div>
             </td>
           </tr>

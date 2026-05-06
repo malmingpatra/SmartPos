@@ -94,8 +94,8 @@ const Keranjang: React.FC<KeranjangProps> = ({
                   <button onClick={() => !readOnly && onUpdateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
                     <i className="fas fa-minus text-[8px]"></i>
                   </button>
-                  <input type="number" inputMode="numeric" readOnly={readOnly} className="w-8 bg-transparent text-center font-black text-xs focus:outline-none text-gray-700" value={item.quantity} onChange={(e) => { if (readOnly) return; const val = parseInt(e.target.value); if (!isNaN(val) && val >= 0) onSetQuantity(item.id, val); }} />
-                  <button onClick={() => !readOnly && onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
+                  <input type="number" inputMode="numeric" readOnly={readOnly} max={item.stock} className="w-8 bg-transparent text-center font-black text-xs focus:outline-none text-gray-700" value={item.quantity || ''} onChange={(e) => { if (readOnly) return; const val = parseInt(e.target.value); if (!isNaN(val) && val >= 0) onSetQuantity(item.id, val); }} />
+                  <button disabled={item.quantity >= item.stock} onClick={() => !readOnly && onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400">
                     <i className="fas fa-plus text-[8px]"></i>
                   </button>
                 </div>

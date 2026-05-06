@@ -44,7 +44,7 @@ export interface Product {
   stock: number;
 }
 
-export interface CartItem extends Pick<Product, 'id' | 'name' | 'price'> {
+export interface CartItem extends Pick<Product, 'id' | 'name' | 'price' | 'stock'> {
   quantity: number;
 }
 

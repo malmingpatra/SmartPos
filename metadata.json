@@ -1,5 +1,5 @@
 {
-  "name": "SmartPOS",
+  "name": "NOTA+",
   "description": "A feature-rich POS application with PIN login, RBAC, inventory management, offline support, and advanced reporting. Built for efficiency and ease of use.",
   "requestFramePermissions": []
 }

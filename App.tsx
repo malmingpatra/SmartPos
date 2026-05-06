@@ -90,12 +90,13 @@ const App: React.FC = () => {
 
   const addToCart = (product: Product) => {
     if (!user || normalizeRole(user.role) === Role.GUDANG) return;
+    if (product.stock <= 0) return;
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
-        return prev.map(item => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item);
+        return prev.map(item => item.id === product.id ? { ...item, quantity: Math.min(product.stock, item.quantity + 1) } : item);
       }
-      return [...prev, { id: product.id, name: product.name, price: product.price, quantity: 1 }];
+      return [...prev, { id: product.id, name: product.name, price: product.price, stock: product.stock, quantity: 1 }];
     });
     // Buka keranjang otomatis saat menambah item
     setShowCart(true);
@@ -104,7 +105,7 @@ const App: React.FC = () => {
   const updateCartQuantity = (id: string, delta: number) => {
     setCart(prev => prev.map(item => {
       if (item.id === id) {
-        const newQty = Math.max(1, item.quantity + delta);
+        const newQty = Math.max(1, Math.min(item.stock, item.quantity + delta));
         return { ...item, quantity: newQty };
       }
       return item;
@@ -113,7 +114,7 @@ const App: React.FC = () => {
 
   const setManualQuantity = (id: string, value: number) => {
     setCart(prev => prev.map(item => 
-      item.id === id ? { ...item, quantity: value } : item
+      item.id === id ? { ...item, quantity: Math.max(1, Math.min(item.stock, value)) } : item
     ));
   };
 
@@ -206,7 +207,7 @@ const App: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-white">
         <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-opacity-20 border-t-blue-600 mb-4"></div>
-        <p className="text-gray-400 font-bold text-sm tracking-widest uppercase animate-pulse">Memuat SmartPOS...</p>
+        <p className="text-gray-400 font-bold text-sm tracking-widest uppercase animate-pulse">Tunggu Sebentar...</p>
       </div>
     );
   }
