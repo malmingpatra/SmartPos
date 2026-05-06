@@ -204,19 +204,25 @@ const App: React.FC = () => {
           <div className="bg-white/95 backdrop-blur-md border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] px-5 py-2.5 rounded-2xl flex items-center justify-between">
             {/* Logo Section */}
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100">
+              <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100 shrink-0">
                 <i className="fas fa-cash-register text-sm"></i>
               </div>
-              <div className="flex flex-col justify-center">
-                <h1 className="text-lg font-black text-blue-800 tracking-tighter leading-none">SmartPOS</h1>
-                <span className="text-[9px] font-bold uppercase text-blue-500/60 tracking-[0.15em] mt-1">Sistem Pintar</span>
-              </div>
+              {user && (
+                <div className="flex flex-col justify-center items-start">
+                  <span className="text-[9px] font-black uppercase text-blue-500 tracking-[0.1em] leading-none mb-1">
+                    {user.role}
+                  </span>
+                  <h1 className="text-sm font-black text-gray-800 tracking-tight leading-none">
+                    {user.name}
+                  </h1>
+                </div>
+              )}
             </div>
 
             {/* User / Login Section */}
             <div className="flex items-center">
               <AnimatePresence mode="wait">
-                {!user ? (
+                {!user && (
                   <motion.button
                     key="login-btn"
                     initial={{ opacity: 0 }}
@@ -228,25 +234,6 @@ const App: React.FC = () => {
                     <i className="fas fa-lock"></i>
                     Masuk
                   </motion.button>
-                ) : (
-                  <motion.div 
-                    key="user-badge"
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center gap-4 pl-5 border-l border-gray-100"
-                  >
-                    <div className="flex flex-col items-end">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                        <p className="font-black text-gray-800 text-[11px] uppercase tracking-tight">{user.name}</p>
-                      </div>
-                      <div className="mt-1 px-2 py-0.5 bg-gray-50 rounded-md border border-gray-100">
-                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest leading-none">
-                          {user.role}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
