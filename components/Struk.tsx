@@ -18,7 +18,7 @@ const Struk: React.FC<StrukProps> = ({ order }) => {
   return (
     <div className="text-gray-800 font-mono text-sm leading-tight p-2">
       <div className="text-center mb-6">
-        <h2 className="text-xl font-bold uppercase tracking-widest">NOTA SMARTPOS</h2>
+        <h2 className="text-xl font-bold uppercase tracking-widest">NOTA</h2>
       </div>
 
       <div className="border-b border-dashed py-3 space-y-1 text-xs">
@@ -81,9 +81,9 @@ const Struk: React.FC<StrukProps> = ({ order }) => {
           <span>Rp {subtotalBeforeDiscounts.toLocaleString()}</span>
         </div>
         
-        {(order.discount && order.discount > 0) && (
+        {(order.discount > 0) && (
           <div className="flex justify-between text-red-500 italic">
-            <span>Diskon</span>
+            <span>Diskon ({Math.round((order.discount / subtotalBeforeDiscounts) * 100)}%)</span>
             <span>- Rp {order.discount.toLocaleString()}</span>
           </div>
         )}
