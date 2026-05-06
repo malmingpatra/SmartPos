@@ -32,6 +32,7 @@ export function normalizeRole(role: string | undefined | null): Role {
 export interface User {
   id: string;
   name: string;
+  username: string; // Tambahkan ini
   pin: string;
   role: Role;
 }

@@ -17,10 +17,34 @@ export const INITIAL_PRODUCTS: Product[] = [
 ];
 
 export const INITIAL_USERS: User[] = [
-  { id: 'dddddddd-dddd-4ddd-bddd-dddddddddddd', name: 'System Admin', pin: '12345', role: Role.ADMIN },
-  { id: 'eeeeeeee-eeee-4eee-beee-eeeeeeeeeeee', name: 'Ani Kasir', pin: '00000', role: Role.KASIR },
-  { id: 'ffffffff-ffff-4fff-bfff-ffffffffffff', name: 'Budi Sales', pin: '11111', role: Role.SALES },
-  { id: '00000000-0000-4000-b000-000000000000', name: 'Gudang Master', pin: '22222', role: Role.GUDANG },
+  { 
+    id: 'dddddddd-dddd-4ddd-bddd-dddddddddddd', 
+    name: 'System Admin', 
+    username: 'admin',
+    pin: '12345', 
+    role: Role.ADMIN
+  },
+  { 
+    id: 'eeeeeeee-eeee-4eee-beee-eeeeeeeeeeee', 
+    name: 'Ani Kasir', 
+    username: 'ani',
+    pin: '00000', 
+    role: Role.KASIR
+  },
+  { 
+    id: 'ffffffff-ffff-4fff-bfff-ffffffffffff', 
+    name: 'Budi Sales', 
+    username: 'budi',
+    pin: '11111', 
+    role: Role.SALES
+  },
+  { 
+    id: '00000000-0000-4000-b000-000000000000', 
+    name: 'Gudang Master', 
+    username: 'gudang1',
+    pin: '22222', 
+    role: Role.GUDANG
+  },
 ];
 
 export const APP_CONFIG = {

@@ -249,7 +249,55 @@ export const supabaseService = {
         .from('users')
         .select('*')
         .eq('pin', pin)
-        .single();
+        .maybeSingle();
+      
+      if (error || !data) return null;
+      return {
+        ...data,
+        role: normalizeRole(data.role)
+      } as User;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  verifyUsernamePin: async (username: string, pin: string): Promise<User | null> => {
+    if (!supabase) {
+      const users = getLocalCache('pos_users') || [];
+      const found = users.find((u: any) => u.username?.toLowerCase() === username.toLowerCase() && u.pin === pin);
+      return found ? { ...found, role: normalizeRole(found.role) } : null;
+    }
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('username', username)
+        .eq('pin', pin)
+        .maybeSingle();
+      
+      if (error || !data) return null;
+      return {
+        ...data,
+        role: normalizeRole(data.role)
+      } as User;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  verifyUserPin: async (userId: string, pin: string): Promise<User | null> => {
+    if (!supabase) {
+      const users = getLocalCache('pos_users') || [];
+      const found = users.find((u: any) => u.id === userId && u.pin === pin);
+      return found ? { ...found, role: normalizeRole(found.role) } : null;
+    }
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .eq('pin', pin)
+        .maybeSingle();
       
       if (error || !data) return null;
       return {

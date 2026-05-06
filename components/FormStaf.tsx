@@ -12,6 +12,7 @@ const FormStaf: React.FC<FormStafProps> = ({ user, onClose, onSave }) => {
   const [formData, setFormData] = useState<User>(user || {
     id: crypto.randomUUID(),
     name: '',
+    username: '',
     pin: '',
     role: Role.KASIR
   });
@@ -20,9 +21,13 @@ const FormStaf: React.FC<FormStafProps> = ({ user, onClose, onSave }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.username) {
+      alert('Username wajib diisi');
+      return;
+    }
     console.log("Submitting UserForm with data:", formData);
-    if (formData.pin.length < 4 || formData.pin.length > 12) {
-      alert('PIN harus berukuran 4 sampai 12 digit');
+    if (formData.pin.length < 3 || formData.pin.length > 12) {
+      alert('PIN harus berukuran 3 sampai 12 digit (minimal 3)');
       return;
     }
     try {
@@ -51,15 +56,23 @@ const FormStaf: React.FC<FormStafProps> = ({ user, onClose, onSave }) => {
           <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Nama Lengkap</label>
           <input required type="text" placeholder="Contoh: Budi Santoso" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
         </div>
+        
         <div>
-          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">PIN Keamanan (4-12 Digit)</label>
-          <input required type="password" maxLength={12} inputMode="numeric" placeholder="••••" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl tracking-[0.5em] text-center font-black focus:outline-none transition" value={formData.pin} onChange={e => setFormData({ ...formData, pin: e.target.value.replace(/\D/g, '') })} />
+          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Username</label>
+          <input required type="text" placeholder="budi123" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} />
         </div>
-        <div>
-          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Role / Hak Akses</label>
-          <select className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value as Role })}>
-            {Object.values(Role).map(role => <option key={role} value={role}>{role}</option>)}
-          </select>
+
+        <div className="flex gap-4">
+          <div className="w-[60%]">
+            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">PIN (3-12 Digit)</label>
+            <input required type="password" maxLength={12} inputMode="numeric" placeholder="••••" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl tracking-[0.3em] text-center font-black focus:outline-none transition" value={formData.pin} onChange={e => setFormData({ ...formData, pin: e.target.value.replace(/\D/g, '') })} />
+          </div>
+          <div className="flex-1">
+            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Role</label>
+            <select className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value as Role })}>
+              {Object.values(Role).map(role => <option key={role} value={role}>{role}</option>)}
+            </select>
+          </div>
         </div>
       </div>
       <div className="flex gap-3 pt-6">

@@ -25,6 +25,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
   const filteredUsers = useMemo(() => {
     return users.filter(u => {
       const matchesSearch = u.name.toLowerCase().includes(userSearch.toLowerCase()) || 
+                           u.username.toLowerCase().includes(userSearch.toLowerCase()) ||
                            u.role.toLowerCase().includes(userSearch.toLowerCase());
       const matchesRole = userFilterRole === 'all' || u.role === userFilterRole;
       return matchesSearch && matchesRole;
@@ -213,19 +214,24 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                       />
                     </td>
                     <td className="px-4 md:px-6 py-4">
-                      <span className="font-bold text-gray-800 block truncate w-full">{u.name}</span>
-                      <div className="mt-1">
-                        <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tight border ${
-                          u.role === Role.ADMIN ? 'bg-purple-50 text-purple-600 border-purple-100' :
-                          u.role === Role.MANAGER ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
-                          u.role === Role.GUDANG_MASTER ? 'bg-orange-50 text-orange-600 border-orange-100' :
-                          u.role === Role.KASIR ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                          u.role === Role.SALES ? 'bg-blue-50 text-blue-600 border-blue-100' :
-                          u.role === Role.GUDANG ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                          'bg-gray-50 text-gray-600 border-gray-100'
-                        }`}>
-                          {u.role}
-                        </span>
+                      <div className="truncate">
+                        <span className="font-black text-gray-800 block truncate text-xs uppercase tracking-tight mb-1">{u.name}</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-500 text-[8px] font-black tracking-widest border border-gray-200/50">
+                            @{u.username}
+                          </span>
+                          <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${
+                            u.role === Role.ADMIN ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                            u.role === Role.KASIR ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                            u.role === Role.SALES ? 'bg-green-50 text-green-600 border-green-100' :
+                            u.role === Role.GUDANG_MASTER ? 'bg-orange-50 text-orange-600 border-orange-100' :
+                            u.role === Role.MANAGER ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                            u.role === Role.GUDANG ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                            'bg-gray-50 text-gray-600 border-gray-100'
+                          }`}>
+                            {u.role}
+                          </span>
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 md:px-6 py-4 text-center">

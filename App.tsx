@@ -288,7 +288,7 @@ const App: React.FC = () => {
       <main 
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto p-4 pt-20 scroll-smooth relative print:overflow-visible print:p-0 print:pt-0 print:static"
+        className="flex-1 overflow-auto p-4 pt-20 scroll-smooth relative no-print"
       >
         <AnimatePresence mode="wait">
           <motion.div 

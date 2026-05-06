@@ -5,8 +5,10 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE "public"."users" (
     "id" uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     "name" text NOT NULL,
+    "username" text NOT NULL UNIQUE,
     "pin" text NOT NULL,
-    "role" text NOT NULL
+    "role" text NOT NULL,
+    "avatar" text
 );
 
 -- 2. Table: products
