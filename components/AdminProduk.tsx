@@ -70,7 +70,11 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect }: { p: Produ
             )}
           </div>
         </div>
-        <span className="text-[11px] font-bold text-gray-400 block mt-1">Rp {p.price.toLocaleString()}</span>
+        <div className="mt-1">
+          <span className="inline-block px-2 py-0.5 bg-emerald-50 text-emerald-600 rounded-lg text-[10px] font-black shadow-sm border border-emerald-100">
+            Rp {p.price.toLocaleString()}
+          </span>
+        </div>
       </td>
       <td className="px-1 py-4 text-center w-16 shrink-0">
         <span className={`inline-block px-1 md:px-2 py-1 rounded text-[10px] font-black ${p.stock < 10 ? 'bg-red-50 text-red-500' : 'bg-green-50 text-green-600'}`}>{p.stock}</span>
@@ -122,9 +126,10 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
       onProductsChange();
       setSelectedProducts(new Set());
       setBulkCategory('');
-      addLog(`Berhasil memperbarui kategori ${selectedProducts.size} produk`);
+      addLog(`Berhasil mengganti kategori`);
     } catch (err: any) {
-      alert("Gagal memperbarui kategori: " + err.message);
+      addLog(`Gagal mengganti kategori`);
+      console.error(err);
     }
   };
 
@@ -158,25 +163,23 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
     setConfirmModal({ show: false, type: 'single' });
     
     if (type === 'single' && id) {
-      addLog(`Memproses hapus produk...`);
       try {
         await supabaseService.deleteProduct(id);
         onProductsChange();
-        addLog(`Berhasil hapus produk`);
+        addLog(`Berhasil menghapus`);
       } catch (err: any) {
-        addLog(`Gagal hapus produk: ${err.message}`);
-        alert(`Gagal menghapus: ${err.message}`);
+        addLog(`Gagal menghapus`);
+        console.error(err);
       }
     } else if (type === 'bulk') {
-      addLog(`Memproses hapus bulk ${selectedProducts.size} produk...`);
       try {
         await supabaseService.bulkDeleteProducts(Array.from(selectedProducts));
         onProductsChange();
         setSelectedProducts(new Set());
-        addLog(`Berhasil hapus bulk produk`);
+        addLog(`Berhasil menghapus`);
       } catch (err: any) {
-        addLog(`Gagal hapus bulk produk: ${err.message}`);
-        alert(`Gagal menghapus bulk: ${err.message}`);
+        addLog(`Gagal menghapus`);
+        console.error(err);
       }
     }
   };
@@ -338,9 +341,14 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
               product={editingProduct} 
               onClose={() => setIsFormOpen(false)} 
               onSave={async (p) => { 
-                await supabaseService.saveProduct(p); 
-                onProductsChange(); 
-                setIsFormOpen(false); 
+                try {
+                  await supabaseService.saveProduct(p); 
+                  onProductsChange(); 
+                  setIsFormOpen(false); 
+                  addLog(`Berhasil ${editingProduct ? 'mengubah' : 'menambah'} produk`);
+                } catch (err: any) {
+                  addLog(`Gagal ${editingProduct ? 'mengubah' : 'menambah'} produk`);
+                }
               }} 
             />
           </div>

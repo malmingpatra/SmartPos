@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { User, Role } from '../types';
 import { supabaseService } from '../supabase';
 import FormStaf from './FormStaf';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface AdminStafProps {
   users: User[];
@@ -17,7 +18,9 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
   const [userFilterRole, setUserFilterRole] = useState('all');
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [confirmModal, setConfirmModal] = useState<{ show: boolean, id: string }>({ show: false, id: '' });
+  const [confirmModal, setConfirmModal] = useState<{ show: boolean, id: string | string[] }>({ show: false, id: '' });
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [bulkRole, setBulkRole] = useState<Role | ''>('');
 
   const filteredUsers = useMemo(() => {
     return users.filter(u => {
@@ -28,30 +31,73 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
     });
   }, [users, userSearch, userFilterRole]);
 
+  const pagedUsers = useMemo(() => {
+    return filteredUsers.slice((userPage - 1) * itemsPerPage, userPage * itemsPerPage);
+  }, [filteredUsers, userPage, itemsPerPage]);
+
+  const handleToggleSelectAll = () => {
+    if (selectedUserIds.length === pagedUsers.length) {
+      setSelectedUserIds([]);
+    } else {
+      setSelectedUserIds(pagedUsers.map(u => u.id));
+    }
+  };
+
+  const handleToggleSelectOne = (id: string) => {
+    setSelectedUserIds(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
   const handleDeleteUser = (id: string) => { 
     addLog("Pencet tombol hapus staf id: " + id);
     setConfirmModal({ show: true, id });
   };
 
+  const handleBulkDelete = () => {
+    if (selectedUserIds.length === 0) return;
+    setConfirmModal({ show: true, id: selectedUserIds });
+  };
+
+  const handleBulkChangeRole = async () => {
+    if (selectedUserIds.length === 0 || !bulkRole) return;
+    try {
+      await supabaseService.bulkUpdateUserRole(selectedUserIds, bulkRole as Role);
+      setSelectedUserIds([]);
+      setBulkRole('');
+      onUsersChange();
+      addLog(`Berhasil mengganti role`);
+    } catch (err: any) {
+      addLog(`Gagal mengganti role`);
+      console.error(err);
+    }
+  };
+
   const processDelete = async () => {
     const { id } = confirmModal;
+    const ids = Array.isArray(id) ? id : [id];
+    
     setConfirmModal({ show: false, id: '' });
-    addLog(`Memproses hapus staf...`);
     try {
-      await supabaseService.deleteUser(id);
+      if (ids.length === 1) {
+        await supabaseService.deleteUser(ids[0]);
+      } else {
+        await supabaseService.bulkDeleteUsers(ids);
+      }
+      setSelectedUserIds([]);
       onUsersChange();
-      addLog(`Berhasil hapus staf`);
+      addLog(`Berhasil menghapus`);
     } catch (err: any) {
-      addLog(`Gagal hapus staf: ${err.message}`);
-      alert(`Gagal menghapus: ${err.message}`);
+      addLog(`Gagal menghapus`);
+      console.error(err);
     }
   };
 
   return (
     <>
       <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
-        {/* Search and Filters - Refined Balanced Box Design (Floating Sticky) */}
-        <div className="sticky top-[74px] z-20 -mx-1 pt-0.5 pb-2 no-print pointer-events-none">
+        {/* Search and Filters */}
+        <div className="sticky top-[74px] z-20 -mx-1 pt-0.5 pb-2 no-print pointer-events-none transition-all duration-300">
           <div className="bg-white/95 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] flex flex-col gap-3 items-stretch pointer-events-auto transition-all duration-300">
             <div className="relative w-full">
               <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
@@ -86,29 +132,103 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
             </div>
           </div>
         </div>
+
+        {selectedUserIds.length > 0 && (
+          <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-white/95 backdrop-blur-xl p-1 rounded-xl border border-gray-100 shadow-[0_15px_40px_rgba(59,130,246,0.15)] z-[200] animate-in fade-in slide-in-from-right-5 duration-300">
+            {/* Role Selection Dropdown */}
+            <div className="relative group">
+              <select 
+                className="w-10 h-10 bg-blue-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-blue-300 text-[10px] font-bold text-transparent transition-all cursor-pointer font-sans"
+                value={bulkRole}
+                onChange={e => setBulkRole(e.target.value as Role)}
+                title="Pilih Role Baru"
+              >
+                <option value="" disabled>Role...</option>
+                {Object.values(Role).map(role => <option key={role} value={role} className="text-gray-900">{role}</option>)}
+              </select>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-blue-500 group-hover:text-blue-700 transition-colors">
+                <i className="fas fa-user-tag text-xs"></i>
+              </div>
+            </div>
+
+            {/* Save/Change Action */}
+            <button 
+              onClick={handleBulkChangeRole}
+              disabled={!bulkRole}
+              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              title="Ubah Role Staf"
+            >
+              <i className="fas fa-save text-xs"></i>
+            </button>
+
+            {/* Delete Action */}
+            <button 
+              onClick={handleBulkDelete}
+              className="w-10 h-10 bg-red-50 text-red-500 border border-red-100 rounded-lg flex items-center justify-center active:scale-90 transition-all hover:bg-red-500 hover:text-white disabled:opacity-30"
+              title="Hapus Staf"
+            >
+              <i className="fas fa-trash-alt text-xs"></i>
+            </button>
+
+            <div className="h-px bg-gray-100 mx-1.5 my-0.5"></div>
+
+            {/* Count Badge (Click to Cancel) */}
+            <button 
+              onClick={() => { setSelectedUserIds([]); setBulkRole(''); }}
+              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-blue-200 active:scale-95 transition-all group relative overflow-hidden"
+              title="Klik untuk Batalkan Pilihan"
+            >
+              <span className="text-[10px] font-black group-hover:hidden">{selectedUserIds.length}</span>
+              <i className="fas fa-times text-[10px] hidden group-hover:block"></i>
+              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            </button>
+          </div>
+        )}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto no-scrollbar">
             <table className="w-full text-left table-fixed min-w-[300px]">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="px-4 md:px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest w-1/2">Nama Staff</th>
-                  <th className="px-2 md:px-4 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center w-1/4">Role</th>
-                  <th className="px-4 md:px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center w-1/4">Aksi</th>
+                  <th className="px-4 py-4 w-[10%] text-center">
+                    <input 
+                      type="checkbox" 
+                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      checked={selectedUserIds.length > 0 && selectedUserIds.length === pagedUsers.length}
+                      onChange={handleToggleSelectAll}
+                    />
+                  </th>
+                  <th className="px-4 md:px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest w-[60%]">Nama Staff</th>
+                  <th className="px-4 md:px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center w-[30%]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y text-sm">
-                {filteredUsers.slice((userPage - 1) * itemsPerPage, userPage * itemsPerPage).map(u => (
-                  <tr key={u.id} className="hover:bg-gray-50/50 transition-colors">
+                {pagedUsers.map(u => (
+                  <tr key={u.id} className={`hover:bg-gray-50/50 transition-colors ${selectedUserIds.includes(u.id) ? 'bg-blue-50/30' : ''}`}>
+                    <td className="px-4 py-4 w-[10%] text-center">
+                      <input 
+                        type="checkbox" 
+                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        checked={selectedUserIds.includes(u.id)}
+                        onChange={() => handleToggleSelectOne(u.id)}
+                      />
+                    </td>
                     <td className="px-4 md:px-6 py-4">
                       <span className="font-bold text-gray-800 block truncate w-full">{u.name}</span>
-                    </td>
-                    <td className="px-2 md:px-4 py-4 text-center">
-                      <span className="inline-block px-2 py-1 bg-blue-50 text-blue-600 rounded text-[9px] font-black uppercase tracking-tight">{u.role}</span>
+                      <div className="mt-1">
+                        <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tight border ${
+                          u.role === Role.ADMIN ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                          u.role === Role.KASIR ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                          u.role === Role.SALES ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                          u.role === Role.GUDANG ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                          'bg-gray-50 text-gray-600 border-gray-100'
+                        }`}>
+                          {u.role}
+                        </span>
+                      </div>
                     </td>
                     <td className="px-4 md:px-6 py-4 text-center">
                       <div className="flex justify-center gap-1 md:gap-2">
                         <button onClick={() => { setEditingUser(u); setIsFormOpen(true); }} className="text-blue-500 hover:bg-blue-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-edit text-xs"></i></button>
-                        <button onClick={() => handleDeleteUser(u.id)} className="text-red-400 hover:bg-red-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-trash text-xs"></i></button>
                       </div>
                     </td>
                   </tr>
@@ -152,9 +272,10 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                   await supabaseService.saveUser(u); 
                   onUsersChange(); 
                   setIsFormOpen(false); 
+                  addLog(`Berhasil ${editingUser ? 'mengubah' : 'menambah'} staf`);
                 } catch (err: any) {
-                  console.error("Save User Exception:", err);
-                  alert("ERROR SIMPAN STAF:\n" + err.message);
+                  addLog(`Gagal ${editingUser ? 'mengubah' : 'menambah'} staf`);
+                  console.error(err);
                 }
               }} 
             />

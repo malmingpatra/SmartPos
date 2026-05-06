@@ -47,14 +47,13 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
   const processDelete = async () => {
     const { id } = confirmModal;
     setConfirmModal({ show: false, id: '' });
-    addLog(`Memproses hapus member...`);
     try {
       await supabaseService.deleteCustomer(id);
       onCustomersChange();
-      addLog(`Berhasil hapus member`);
+      addLog(`Berhasil menghapus`);
     } catch (err: any) {
-      addLog(`Gagal hapus member: ${err.message}`);
-      alert(`Gagal menghapus: ${err.message}`);
+      addLog(`Gagal menghapus`);
+      console.error(err);
     }
   };
 
@@ -74,15 +73,14 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
     if (isProcessing || selectedCustomerIds.length === 0) return;
     setIsProcessing(true);
     try {
-      addLog("Bulk hapus payload dikirim...");
       await supabaseService.bulkDeleteCustomers(selectedCustomerIds);
       await onCustomersChange();
-      addLog("Data di-refresh");
+      addLog(`Berhasil menghapus`);
       setSelectedCustomerIds([]);
       setShowBulkDeleteConfirm(false);
     } catch (error: any) {
-      addLog(`Gagal bulk hapus: ${error.message}`);
-      alert(`Terjadi kesalahan: ${error.message}`);
+      addLog(`Gagal menghapus`);
+      console.error(error);
     } finally { setIsProcessing(false); }
   };
 
@@ -103,18 +101,16 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
     const newOwner = users.find(u => u.id === targetOwnerId);
     if (!newOwner) return;
     
-    addLog(`Pencet bulk pindah ke: ${newOwner.name}`);
     setIsProcessing(true);
     try {
       await supabaseService.bulkTransferCustomers(selectedCustomerIds, newOwner.id, newOwner.role);
-      addLog("Bulk pindah payload dikirim...");
       await onCustomersChange();
-      addLog("Data di-refresh");
+      addLog(`Berhasil mengganti member`);
       setSelectedCustomerIds([]);
       setShowTransferModal(false);
     } catch (error: any) {
-      addLog(`Gagal bulk pindah: ${error.message}`);
-      alert(`Terjadi kesalahan: ${error.message}`);
+      addLog(`Gagal mengganti member`);
+      console.error(error);
     } finally { setIsProcessing(false); }
   };
 
@@ -227,7 +223,11 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
                     <td className="px-4 md:px-6 py-4"><input type="checkbox" checked={selectedCustomerIds.includes(c.id)} onChange={() => handleToggleSelectOne(c.id)} /></td>
                     <td className="px-2 py-4 overflow-hidden text-left">
                       <span className="font-bold text-gray-800 block truncate">{c.name}</span>
-                      <span className="text-[10px] font-black text-gray-400 block truncate">{c.phone}</span>
+                      <div className="mt-1 mb-1">
+                        <span className="inline-block px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded text-[9px] font-black uppercase tracking-tight border border-blue-100">
+                          <i className="fas fa-phone-alt mr-1 text-[8px]"></i>{c.phone}
+                        </span>
+                      </div>
                       <span className="text-[10px] font-black text-emerald-600 block truncate">Total: Rp {c.total_spent.toLocaleString()}</span>
                     </td>
                     <td className="px-4 md:px-6 py-4 text-center">
@@ -333,8 +333,10 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
                   await supabaseService.saveCustomer(c); 
                   await onCustomersChange(); 
                   setIsFormOpen(false); 
+                  addLog(`Berhasil ${editingCustomer ? 'mengubah' : 'menambah'} member`);
                 } catch (err: any) {
-                  alert("Gagal menyimpan member: " + err.message);
+                  addLog(`Gagal ${editingCustomer ? 'mengubah' : 'menambah'} member`);
+                  console.error(err);
                 }
               }} 
             />

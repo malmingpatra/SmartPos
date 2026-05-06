@@ -30,6 +30,7 @@ const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   const [isDockVisible, setIsDockVisible] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   const lastScrollY = useRef(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +55,19 @@ const App: React.FC = () => {
       setCustomers([]);
     }
   }, [user]);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
@@ -220,7 +234,19 @@ const App: React.FC = () => {
             </div>
 
             {/* User / Login Section */}
-            <div className="flex items-center">
+            <div className="flex items-center gap-4">
+              {user && (
+                <div className={`px-2 py-0.5 rounded-lg flex items-center gap-1.5 border ${
+                  isOnline 
+                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100' 
+                    : 'bg-red-50 text-red-600 border-red-100'
+                } transition-all duration-300`}>
+                  <div className={`w-1.5 h-1.5 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`}></div>
+                  <span className="text-[8px] font-black uppercase tracking-widest leading-none translate-y-[0.5px]">
+                    {isOnline ? 'Online' : 'Offline'}
+                  </span>
+                </div>
+              )}
               <AnimatePresence mode="wait">
                 {!user && (
                   <motion.button

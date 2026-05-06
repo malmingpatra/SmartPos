@@ -47,10 +47,11 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       chartData: [] as { name: string, revenue: number }[],
       topProducts: [] as { name: string, quantity: number }[],
       staffStats: [] as { name: string, quantity: number, revenue: number }[],
+      detailedProducts: [] as { name: string, price: number, quantity: number, subtotal: number }[],
     };
 
     const timeSeriesData: { [key: string]: number } = {};
-    const productMap: { [name: string]: number } = {};
+    const productMap: { [name: string]: { quantity: number, price: number, subtotal: number } } = {};
     const staffMap: { [name: string]: { quantity: number, revenue: number } } = {};
 
     filteredOrders.forEach(o => {
@@ -66,7 +67,11 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
 
       // Product Stats
       o.items.forEach(item => {
-        productMap[item.name] = (productMap[item.name] || 0) + item.quantity;
+        if (!productMap[item.name]) {
+          productMap[item.name] = { quantity: 0, price: item.price, subtotal: 0 };
+        }
+        productMap[item.name].quantity += item.quantity;
+        productMap[item.name].subtotal += item.price * item.quantity;
         staffMap[o.user_name].quantity += item.quantity;
       });
     });
@@ -77,9 +82,13 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
     })).reverse();
 
     report.topProducts = Object.keys(productMap)
-      .map(name => ({ name, quantity: productMap[name] }))
+      .map(name => ({ name, quantity: productMap[name].quantity }))
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
+
+    report.detailedProducts = Object.keys(productMap)
+      .map(name => ({ name, ...productMap[name] }))
+      .sort((a, b) => b.subtotal - a.subtotal);
 
     report.staffStats = Object.keys(staffMap)
       .map(name => ({ name, ...staffMap[name] }))
@@ -91,8 +100,50 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
     return report;
   }, [filteredOrders, staffSort]);
 
+  const getReportTitle = () => {
+    if (reportPeriod === 'today') return 'Laporan Penjualan Hari Ini';
+    if (reportPeriod === '7days') return 'Laporan Penjualan 7 Hari Terakhir';
+    if (reportPeriod === 'month') return 'Laporan Penjualan Bulan Ini';
+    if (reportPeriod === 'custom') {
+      return `Laporan Penjualan (${customRange.start || '?'} s/d ${customRange.end || '?'})`;
+    }
+    return 'Laporan Penjualan';
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
+      {/* Print-Only Report Content (Hidden in UI) */}
+      <div className="hidden print:block font-mono text-[10pt] leading-tight p-4">
+        <div className="text-center mb-6">
+          <h1 className="text-base font-black uppercase mb-1">SMART POS</h1>
+          <p className="text-[10pt]">{getReportTitle()}</p>
+          <div className="h-px bg-black w-full my-2"></div>
+        </div>
+
+        <div className="space-y-4">
+          {stats.detailedProducts.map((p, idx) => (
+            <div key={idx} className="space-y-1">
+              <div className="font-bold uppercase">{p.name}</div>
+              <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
+                <span className="w-1/3 text-center">x{p.quantity}</span>
+                <span className="w-1/3 text-right font-bold">Rp {p.subtotal.toLocaleString()}</span>
+              </div>
+              <div className="text-center opacity-30 text-[8pt]">--</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 border-t-2 border-double border-black pt-2 flex justify-between items-center">
+          <span className="font-black uppercase">TOTAL PENJUALAN</span>
+          <span className="text-base font-black">Rp {stats.total_revenue.toLocaleString()}</span>
+        </div>
+
+        <div className="mt-12 text-center text-[8pt] opacity-50 italic">
+          Dicetak pada: {new Date().toLocaleString('id-ID')}
+        </div>
+      </div>
+
       {/* Sticky Filter Bar */}
       <div className="sticky top-16 z-20 no-print">
         <div className="bg-white/95 backdrop-blur-md p-3 rounded-2xl border border-gray-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.08)] flex flex-col gap-3">

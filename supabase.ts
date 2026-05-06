@@ -197,6 +197,38 @@ export const supabaseService = {
     }
   },
 
+  bulkDeleteUsers: async (ids: string[]): Promise<void> => {
+    const users = (getLocalCache('pos_users') || []).filter((u: any) => !ids.includes(u.id));
+    updateLocalCache('pos_users', users);
+
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('users').delete().in('id', ids);
+      if (error) throw error;
+    } catch (err: any) {
+      console.error("Gagal bulkDeleteUsers:", err);
+      throw new Error(err.message);
+    }
+  },
+
+  bulkUpdateUserRole: async (ids: string[], newRole: Role): Promise<void> => {
+    const users = getLocalCache('pos_users') || [];
+    ids.forEach(id => {
+      const index = users.findIndex((u: any) => u.id === id);
+      if (index > -1) users[index].role = newRole;
+    });
+    updateLocalCache('pos_users', users);
+
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('users').update({ role: newRole }).in('id', ids);
+      if (error) throw error;
+    } catch (err: any) {
+      console.error("Gagal bulkUpdateUserRole:", err);
+      throw new Error(err.message);
+    }
+  },
+
   verifyPin: async (pin: string): Promise<User | null> => {
     if (!supabase) {
       const users = getLocalCache('pos_users') || [];
