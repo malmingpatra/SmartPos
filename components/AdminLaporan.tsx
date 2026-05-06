@@ -100,14 +100,20 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
     return report;
   }, [filteredOrders, staffSort]);
 
-  const getReportTitle = () => {
-    if (reportPeriod === 'today') return 'Laporan Penjualan Hari Ini';
-    if (reportPeriod === '7days') return 'Laporan Penjualan 7 Hari Terakhir';
-    if (reportPeriod === 'month') return 'Laporan Penjualan Bulan Ini';
-    if (reportPeriod === 'custom') {
-      return `Laporan Penjualan (${customRange.start || '?'} s/d ${customRange.end || '?'})`;
+  const getReportDate = () => {
+    const now = new Date();
+    const formatDate = (date: Date) => date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+    
+    if (reportPeriod === 'today') return formatDate(now);
+    if (reportPeriod === '7days') {
+      const past = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      return `${formatDate(past)} - ${formatDate(now)}`;
     }
-    return 'Laporan Penjualan';
+    if (reportPeriod === 'month') return now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+    if (reportPeriod === 'custom') {
+      return `${customRange.start || '?'} s/d ${customRange.end || '?'}`;
+    }
+    return '';
   };
 
   return (
@@ -115,8 +121,8 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       {/* Print-Only Report Content (Hidden in UI) */}
       <div className="hidden print-area font-mono text-[10pt] leading-tight p-4 bg-white text-black">
         <div className="text-center mb-6">
-          <h1 className="text-base font-black uppercase mb-1">SMART POS</h1>
-          <p className="text-[10pt]">{getReportTitle()}</p>
+          <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
+          <p className="text-[10pt]">{getReportDate()}</p>
           <div className="h-px bg-black w-full my-2"></div>
         </div>
 
@@ -127,7 +133,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
               <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
                 <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
                 <span className="w-1/3 text-center">x{p.quantity}</span>
-                <span className="w-1/3 text-right font-bold">Rp {p.subtotal.toLocaleString()}</span>
+                <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
               </div>
               <div className="text-center opacity-30 text-[8pt]">--</div>
             </div>
@@ -137,10 +143,6 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
         <div className="mt-8 border-t-2 border-double border-black pt-2 flex justify-between items-center">
           <span className="font-black uppercase">TOTAL PENJUALAN</span>
           <span className="text-base font-black">Rp {stats.total_revenue.toLocaleString()}</span>
-        </div>
-
-        <div className="mt-12 text-center text-[8pt] opacity-50 italic">
-          Dicetak pada: {new Date().toLocaleString('id-ID')}
         </div>
       </div>
 
