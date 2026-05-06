@@ -50,6 +50,9 @@
         width: 100%;
         display: block !important;
       }
+      .page-counter::after {
+        content: "0" counter(page, decimal-leading-zero);
+      }
       .no-print {
         display: none !important;
       }

@@ -43,11 +43,14 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   const stats = useMemo(() => {
     const report = {
       total_revenue: 0,
+      total_gross_revenue: 0,
+      total_discount: 0,
       order_count: filteredOrders.length,
       chartData: [] as { name: string, revenue: number }[],
       topProducts: [] as { name: string, quantity: number }[],
       staffStats: [] as { name: string, quantity: number, revenue: number }[],
       detailedProducts: [] as { name: string, price: number, quantity: number, subtotal: number }[],
+      discountedOrders: [] as { receipt_number: string, discount: number }[],
     };
 
     const timeSeriesData: { [key: string]: number } = {};
@@ -56,6 +59,14 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
 
     filteredOrders.forEach(o => {
       report.total_revenue += o.total_amount;
+      report.total_discount += o.discount || 0;
+
+      if (o.discount && o.discount > 0) {
+        report.discountedOrders.push({
+          receipt_number: o.receipt_number,
+          discount: o.discount
+        });
+      }
       
       // Time Series
       const dateKey = new Date(o.created_at).toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
@@ -67,11 +78,14 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
 
       // Product Stats
       o.items.forEach(item => {
+        const itemGross = item.price * item.quantity;
+        report.total_gross_revenue += itemGross;
+
         if (!productMap[item.name]) {
           productMap[item.name] = { quantity: 0, price: item.price, subtotal: 0 };
         }
         productMap[item.name].quantity += item.quantity;
-        productMap[item.name].subtotal += item.price * item.quantity;
+        productMap[item.name].subtotal += itemGross;
         staffMap[o.user_name].quantity += item.quantity;
       });
     });
@@ -109,42 +123,108 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       const past = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       return `${formatDate(past)} - ${formatDate(now)}`;
     }
-    if (reportPeriod === 'month') return now.toLocaleDateString('id-ID', { year: 'numeric', month: 'long' });
+    if (reportPeriod === 'month') {
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      return `${formatDate(firstDay)} - ${formatDate(lastDay)}`;
+    }
     if (reportPeriod === 'custom') {
-      return `${customRange.start || '?'} s/d ${customRange.end || '?'}`;
+      const startStr = customRange.start ? formatDate(new Date(customRange.start)) : '?';
+      const endStr = customRange.end ? formatDate(new Date(customRange.end)) : '?';
+      return `${startStr} - ${endStr}`;
     }
     return '';
   };
 
+  const printIdPrefix = useMemo(() => {
+    const now = new Date();
+    const d = String(now.getDate()).padStart(2, '0');
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const y = now.getFullYear();
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const randLetter = letters[Math.floor(Math.random() * letters.length)];
+    const randDigits = String(Math.floor(Math.random() * 90 + 10)); // 2 digits
+    return `${d}${m}${y}-${randLetter}${randDigits}`;
+  }, []);
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
       {/* Print-Only Report Content (Hidden in UI) */}
-      <div className="hidden print-area font-mono text-[10pt] leading-tight p-4 bg-white text-black">
-        <div className="text-center mb-6">
-          <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
-          <p className="text-[10pt]">{getReportDate()}</p>
-          <div className="h-px bg-black w-full my-2"></div>
-        </div>
-
-        <div className="space-y-4">
-          {stats.detailedProducts.map((p, idx) => (
-            <div key={idx} className="space-y-1">
-              <div className="font-bold uppercase">{p.name}</div>
-              <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
-                <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
-                <span className="w-1/3 text-center">x{p.quantity}</span>
-                <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
+      <table className="hidden print-area font-mono text-[10pt] leading-tight p-4 bg-white text-black w-full" style={{ width: '100%' }}>
+        <thead>
+          <tr>
+            <td>
+              <div className="text-center mb-6">
+                <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
+                <p className="text-[10pt]">{getReportDate()}</p>
+                <div className="h-px bg-black w-full my-2"></div>
               </div>
-              <div className="text-center opacity-30 text-[8pt]">--</div>
-            </div>
-          ))}
-        </div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {/* Bagian 1: PENJUALAN KOTOR */}
+              <div className="mb-6">
+                <h2 className="font-bold text-sm mb-3">DAFTAR PENJUALAN KOTOR</h2>
+                <div className="space-y-3">
+                  {stats.detailedProducts.map((p, idx) => (
+                    <div key={idx} className="space-y-1">
+                      <div className="font-bold uppercase">{p.name}</div>
+                      <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                        <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
+                        <span className="w-1/3 text-center">x{p.quantity}</span>
+                        <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold">
+                  <span className="uppercase">TOTAL PENJUALAN KOTOR</span>
+                  <span>Rp {stats.total_gross_revenue.toLocaleString()}</span>
+                </div>
+              </div>
 
-        <div className="mt-8 border-t-2 border-double border-black pt-2 flex justify-between items-center">
-          <span className="font-black uppercase">TOTAL PENJUALAN</span>
-          <span className="text-base font-black">Rp {stats.total_revenue.toLocaleString()}</span>
-        </div>
-      </div>
+              {/* Bagian 2: RINCIAN DISKON */}
+              <div className="mb-6 mt-8">
+                <h2 className="font-bold text-sm mb-3">RINCIAN DISKON</h2>
+                <div className="space-y-2">
+                  {stats.discountedOrders.length > 0 ? stats.discountedOrders.map((o, idx) => (
+                    <div key={idx} className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                      <span>{o.receipt_number}</span>
+                      <span className="text-right text-red-600">- Rp {o.discount.toLocaleString()}</span>
+                    </div>
+                  )) : (
+                    <div className="text-gray-500 italic pb-1">Tidak ada diskon</div>
+                  )}
+                </div>
+                <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold text-red-600">
+                  <span className="uppercase">TOTAL DISKON</span>
+                  <span>- Rp {stats.total_discount.toLocaleString()}</span>
+                </div>
+              </div>
+
+              {/* Bagian 3: PENDAPATAN BERSIH */}
+              <div className="mb-4 mt-8 border-t-2 border-double border-black pt-2 flex flex-col">
+                <div className="flex justify-between items-center text-base font-black uppercase">
+                  <span>PENDAPATAN BERSIH</span>
+                  <span>Rp {stats.total_revenue.toLocaleString()}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <div className="text-right text-[8pt] opacity-50 mt-[50px]">
+                ID: {printIdPrefix}-<span className="page-counter"></span>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
 
       {/* Sticky Filter Bar */}
       <div className="sticky top-16 z-20 no-print">
@@ -191,12 +271,12 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3 px-1">
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
+      <div className="flex gap-3 px-1">
+        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center w-[70%]">
           <p className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Pendapatan</p>
           <p className="text-lg font-black text-blue-700 mt-1">Rp {stats.total_revenue.toLocaleString()}</p>
         </div>
-        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
+        <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center w-[30%]">
           <p className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Transaksi</p>
           <p className="text-lg font-black text-emerald-600 mt-1">{stats.order_count}</p>
         </div>
