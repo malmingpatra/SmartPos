@@ -58,7 +58,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
             <input 
               type="text" 
               placeholder="Cari Nota atau Nama Member..." 
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm"
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm"
               value={searchQuery}
               onChange={(e) => { setSearchQuery(e.target.value); setVisibleCount(20); }}
             />
@@ -69,7 +69,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
               {canSeeStaffFilter ? (
                 <div className="relative h-full">
                   <select 
-                    className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all"
+                    className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
                     value={filterUser}
                     onChange={(e) => { setFilterUser(e.target.value); setVisibleCount(20); }}
                   >
@@ -88,7 +88,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
             <div className="flex-[35] min-w-0">
               <input 
                 type="date" 
-                className="w-full h-full border border-gray-100 rounded-xl px-3 bg-gray-50 text-[11px] focus:outline-none focus:bg-white focus:border-blue-400 font-bold text-gray-600 shadow-sm transition-all"
+                className="w-full h-full border border-gray-100 rounded-xl px-3 bg-gray-50 text-[11px] focus:outline-none focus:bg-white focus:border-orange-400 font-bold text-gray-600 shadow-sm transition-all"
                 value={filterDate}
                 onChange={(e) => { setFilterDate(e.target.value); setVisibleCount(20); }}
               />
@@ -131,10 +131,10 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
                 </tr>
               ) : (
                 displayData.map(o => (
-                  <tr key={o.id} onClick={() => onViewOrder(o)} className="hover:bg-blue-50/50 cursor-pointer transition group">
+                  <tr key={o.id} onClick={() => onViewOrder(o)} className="hover:bg-orange-50/50 cursor-pointer transition group">
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="font-mono font-bold text-blue-600 group-hover:text-blue-700">{o.receipt_number}</span>
+                        <span className="font-mono font-bold text-orange-600 group-hover:text-orange-700">{o.receipt_number}</span>
                         <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
                           {o.buyer_name && (
                             <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded uppercase tracking-tighter">
@@ -151,7 +151,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right"><span className="font-bold text-gray-700 text-[11px] md:text-xs whitespace-nowrap">Rp {o.total_amount.toLocaleString('id-ID')}</span></td>
-                    <td className="px-6 py-4 text-center"><button className="bg-blue-50 text-blue-600 w-8 h-8 rounded-lg flex items-center justify-center"><i className="fas fa-eye text-xs"></i></button></td>
+                    <td className="px-6 py-4 text-center"><button className="bg-orange-50 text-orange-600 w-8 h-8 rounded-lg flex items-center justify-center"><i className="fas fa-eye text-xs"></i></button></td>
                   </tr>
                 ))
               )}
@@ -161,7 +161,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
         <div className="p-4 bg-gray-50 border-t flex flex-col items-center gap-3">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{filtered.length > 0 ? `Menampilkan ${displayData.length} dari ${filtered.length} Transaksi` : '0 Transaksi ditemukan'}</p>
           {visibleCount < filtered.length && (
-            <button onClick={handleLoadMore} className="px-6 py-2 bg-white border border-gray-200 rounded-full text-xs font-bold text-blue-600 flex items-center gap-2">
+            <button onClick={handleLoadMore} className="px-6 py-2 bg-white border border-gray-200 rounded-full text-xs font-bold text-orange-600 flex items-center gap-2">
               Tampilkan Lebih Banyak <i className="fas fa-chevron-down text-[10px]"></i>
             </button>
           )}

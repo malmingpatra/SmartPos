@@ -72,13 +72,13 @@ const ProductRow = ({
           {/* Main Content Block */}
           <div ref={contentRef} className="flex flex-col gap-1 shrink-0 min-w-full">
             {/* Category Tag */}
-            <div className={`category-tag bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-black uppercase tracking-widest text-[8px] md:text-[9px] self-start whitespace-nowrap ${!isScrolling && 'truncate'}`}>
+            <div className={`category-tag bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase tracking-widest text-[8px] md:text-[9px] self-start whitespace-nowrap ${!isScrolling && 'truncate'}`}>
               {p.category}
             </div>
             {/* Name */}
             <h3 
               onClick={() => setViewingProductName(p.name)}
-              className={`font-bold text-gray-800 text-sm md:text-base cursor-help hover:text-blue-600 transition whitespace-nowrap ${!isScrolling && 'truncate'}`}
+              className={`font-bold text-gray-800 text-sm md:text-base cursor-help hover:text-orange-600 transition whitespace-nowrap ${!isScrolling && 'truncate'}`}
             >
               {p.name}
             </h3>
@@ -86,7 +86,7 @@ const ProductRow = ({
           {/* Duplicate Block for Seamless Scrolling (Sync) */}
           {isScrolling && (
             <div className="flex flex-col gap-1 shrink-0 min-w-full">
-              <div className="bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-black uppercase tracking-widest text-[8px] md:text-[9px] self-start whitespace-nowrap">
+              <div className="bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase tracking-widest text-[8px] md:text-[9px] self-start whitespace-nowrap">
                 {p.category}
               </div>
               <h3 className="font-bold text-gray-800 text-sm md:text-base whitespace-nowrap">
@@ -113,7 +113,7 @@ const ProductRow = ({
       </div>
 
       <div className="flex-1 text-right">
-        <p className="text-blue-700 font-black text-sm md:text-lg whitespace-nowrap">
+        <p className="text-orange-700 font-black text-sm md:text-lg whitespace-nowrap">
           Rp{p.price.toLocaleString('id-ID')}
         </p>
       </div>
@@ -125,7 +125,7 @@ const ProductRow = ({
           className={`flex items-center justify-center rounded-lg font-bold transition-all ${
             isButtonDisabled ? 'bg-gray-100 text-gray-300 cursor-not-allowed' :
             p.stock <= 0 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 
-            'bg-blue-600 text-white hover:bg-blue-700 active:scale-90 shadow-sm'
+            'bg-orange-600 text-white hover:bg-orange-700 active:scale-90 shadow-sm'
           } w-9 h-9 md:w-auto md:h-10 md:px-4`}
         >
           <i className="fas fa-plus text-sm"></i>
@@ -175,20 +175,20 @@ const Katalog: React.FC<KatalogProps> = ({ products, onAddToCart, user }) => {
       <div className="sticky top-0 z-20 -mx-1 pt-0.5 pb-2 no-print pointer-events-none">
         <div className="bg-white/90 backdrop-blur-xl p-3 rounded-2xl border border-gray-100 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.08)] flex flex-col gap-3 items-stretch pointer-events-auto transition-all duration-300">
           <div className="relative w-full">
-            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-blue-400 text-xs"></i>
+            <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-orange-400 text-xs"></i>
             <input 
               type="text" 
               placeholder="Cari produk..." 
-              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm"
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm"
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             />
           </div>
           <div className="flex gap-3 w-full">
             <div className="relative w-[70%]">
-              <i className="fas fa-filter absolute left-3.5 top-1/2 -translate-y-1/2 text-blue-400 text-[10px] pointer-events-none z-10"></i>
+              <i className="fas fa-filter absolute left-3.5 top-1/2 -translate-y-1/2 text-orange-400 text-[10px] pointer-events-none z-10"></i>
               <select 
-                className="w-full pl-8 pr-8 py-3 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all"
+                className="w-full pl-8 pr-8 py-3 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
                 value={category}
                 onChange={(e) => { setCategory(e.target.value); setPage(1); }}
               >
@@ -203,7 +203,7 @@ const Katalog: React.FC<KatalogProps> = ({ products, onAddToCart, user }) => {
               }}
               className={`w-[30%] px-3 py-3 rounded-xl border flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm ${
                 sortStock !== 'none' 
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-100' 
+                  ? 'bg-orange-600 text-white border-orange-600 shadow-lg shadow-orange-100' 
                   : 'bg-white text-gray-500 border-gray-100 hover:bg-gray-50'
               }`}
             >

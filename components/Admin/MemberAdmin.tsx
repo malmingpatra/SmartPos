@@ -126,7 +126,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               <input 
                 type="text" 
                 placeholder="Cari member..." 
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
                 value={customerSearch} 
                 onChange={(e) => { setCustomerSearch(e.target.value); setCustomerPage(1); }} 
               />
@@ -135,7 +135,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               {(userRole === Role.ADMIN || userRole === Role.MANAGER) && (
                 <div className="flex-[60] relative h-full">
                   <select 
-                    className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all font-sans"
+                    className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all font-sans"
                     value={customerFilterUser}
                     onChange={(e) => { setCustomerFilterUser(e.target.value); setCustomerPage(1); }}
                   >
@@ -147,7 +147,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               )}
               <button 
                 onClick={() => { setEditingCustomer(null); setIsFormOpen(true); }} 
-                className={`${(userRole === Role.ADMIN || userRole === Role.MANAGER) ? 'flex-[40]' : 'w-full'} bg-amber-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-amber-100 active:scale-95 transition-all`}
+                className={`${(userRole === Role.ADMIN || userRole === Role.MANAGER) ? 'flex-[40]' : 'w-full'} bg-orange-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-orange-100 active:scale-95 transition-all`}
               >
                 <i className="fas fa-user-plus"></i> <span className="truncate">Member</span>
               </button>
@@ -161,7 +161,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
             {/* Staff Selection Dropdown */}
             <div className="relative group">
               <select 
-                className="w-10 h-10 bg-blue-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-blue-300 text-[10px] font-bold text-transparent transition-all cursor-pointer"
+                className="w-10 h-10 bg-orange-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-orange-300 text-[10px] font-bold text-transparent transition-all cursor-pointer"
                 value={targetOwnerId}
                 onChange={(e) => setTargetOwnerId(e.target.value)}
                 title="Pilih Staf Tujuan"
@@ -169,7 +169,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
                 <option value="">Staf...</option>
                 {users.map(u => <option key={u.id} value={u.id} className="text-gray-900">{u.name}</option>)}
               </select>
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-blue-500 group-hover:text-blue-700 transition-colors">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-orange-500 group-hover:text-orange-700 transition-colors">
                 <i className="fas fa-user-friends text-xs"></i>
               </div>
             </div>
@@ -178,7 +178,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
             <button 
               onClick={onBulkTransferSubmit}
               disabled={!targetOwnerId || isProcessing}
-              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              className="w-10 h-10 bg-orange-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-orange-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
               title="Pindahkan Member"
             >
               <i className="fas fa-exchange-alt text-xs"></i>
@@ -199,7 +199,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
             {/* Count Badge (Click to Cancel) */}
             <button 
               onClick={() => setSelectedCustomerIds([])}
-              className="w-10 h-10 bg-amber-500 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-amber-100 active:scale-95 transition-all group relative overflow-hidden"
+              className="w-10 h-10 bg-orange-500 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-orange-100 active:scale-95 transition-all group relative overflow-hidden"
               title="Klik untuk Batalkan Pilihan"
             >
               <span className="text-[10px] font-black group-hover:hidden">{selectedCustomerIds.length}</span>
@@ -225,7 +225,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               </thead>
               <tbody className="divide-y text-sm">
                 {filteredCustomers.slice((customerPage - 1) * itemsPerPage, customerPage * itemsPerPage).map(c => (
-                  <tr key={c.id} className={`${selectedCustomerIds.includes(c.id) ? 'bg-blue-50/50' : ''} hover:bg-gray-50/50 transition-colors`}>
+                  <tr key={c.id} className={`${selectedCustomerIds.includes(c.id) ? 'bg-orange-50/50' : ''} hover:bg-gray-50/50 transition-colors`}>
                     <td className="px-4 md:px-6 py-4">
                       {!isKasirSales && (
                         <input type="checkbox" checked={selectedCustomerIds.includes(c.id)} onChange={() => handleToggleSelectOne(c.id)} />
@@ -234,7 +234,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
                     <td className="px-2 py-4 overflow-hidden text-left">
                       <span className="font-bold text-gray-800 block truncate">{c.name}</span>
                       <div className="mt-1 mb-1">
-                        <span className="inline-block px-1.5 py-0.5 bg-blue-50 text-blue-600 rounded text-[9px] font-black uppercase tracking-tight border border-blue-100">
+                        <span className="inline-block px-1.5 py-0.5 bg-orange-50 text-orange-600 rounded text-[9px] font-black uppercase tracking-tight border border-orange-100">
                           <i className="fas fa-phone-alt mr-1 text-[8px]"></i>{c.phone}
                         </span>
                       </div>
@@ -242,7 +242,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
                     </td>
                     <td className="px-4 md:px-6 py-4 text-center">
                       <div className="flex justify-center">
-                        <button onClick={() => { setEditingCustomer(c); setIsFormOpen(true); }} className="text-blue-500 hover:bg-blue-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-edit"></i></button>
+                        <button onClick={() => { setEditingCustomer(c); setIsFormOpen(true); }} className="text-orange-500 hover:bg-orange-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-edit"></i></button>
                       </div>
                     </td>
                   </tr>
@@ -288,7 +288,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
             </div>
             <div className="flex gap-3">
               <button onClick={() => setShowTransferModal(false)} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-              <button onClick={onBulkTransferSubmit} disabled={!targetOwnerId || isProcessing} className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-blue-100">Proses</button>
+              <button onClick={onBulkTransferSubmit} disabled={!targetOwnerId || isProcessing} className="flex-1 px-4 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-orange-100">Proses</button>
             </div>
           </div>
         </div>

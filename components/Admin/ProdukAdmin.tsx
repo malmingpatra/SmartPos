@@ -38,13 +38,13 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect, showCheckbox
       onMouseLeave={() => setIsActive(false)}
       onTouchStart={() => setIsActive(true)}
       onTouchEnd={() => setIsActive(false)}
-      className={`transition-colors select-none ${selected ? 'bg-blue-50/50' : 'hover:bg-gray-50/50'}`}
+      className={`transition-colors select-none ${selected ? 'bg-orange-50/50' : 'hover:bg-gray-50/50'}`}
     >
       <td className="px-1 py-4 w-10 text-center border-r border-gray-100 shrink-0">
         {showCheckbox && (
           <input 
             type="checkbox" 
-            className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
+            className="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500 cursor-pointer" 
             checked={selected} 
             onChange={(e) => onSelect(p.id, e.target.checked)} 
           />
@@ -54,7 +54,7 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect, showCheckbox
         <div ref={containerRef} className="overflow-hidden">
           <div className={isScrolling ? 'animate-marquee-seamless flex w-max gap-10' : 'flex'}>
             <div ref={contentRef} className="flex flex-col gap-0.5 shrink-0 min-w-full">
-               <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-black uppercase shrink-0 w-fit whitespace-nowrap">
+               <span className="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase shrink-0 w-fit whitespace-nowrap">
                  {p.category}
                </span>
                <span className={`product-name-span font-bold text-gray-800 block leading-tight whitespace-nowrap ${!isScrolling && 'truncate'}`}>
@@ -63,7 +63,7 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect, showCheckbox
             </div>
             {isScrolling && (
               <div className="flex flex-col gap-0.5 shrink-0 min-w-full">
-                 <span className="text-[9px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-black uppercase shrink-0 w-fit whitespace-nowrap">
+                 <span className="text-[9px] bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded font-black uppercase shrink-0 w-fit whitespace-nowrap">
                    {p.category}
                  </span>
                  <span className="font-bold text-gray-800 leading-tight whitespace-nowrap">
@@ -84,7 +84,7 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect, showCheckbox
       </td>
       <td className="px-1 py-4 text-center w-12 shrink-0">
         <div className="flex justify-center gap-1 md:gap-2">
-          <button onClick={() => onEdit(p)} className="text-blue-500 hover:bg-blue-50 w-8 h-8 rounded-lg transition active:scale-95 flex items-center justify-center"><i className="fas fa-edit"></i></button>
+          <button onClick={() => onEdit(p)} className="text-orange-500 hover:bg-orange-50 w-8 h-8 rounded-lg transition active:scale-95 flex items-center justify-center"><i className="fas fa-edit"></i></button>
         </div>
       </td>
     </tr>
@@ -206,7 +206,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
               <input 
                 type="text" 
                 placeholder="Cari di inventaris..." 
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
                 value={productSearch} 
                 onChange={(e) => { setProductSearch(e.target.value); setProductPage(1); }} 
               />
@@ -214,7 +214,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
             <div className="flex gap-3 w-full h-11">
               <div className="flex-[60] relative h-full">
                 <select 
-                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all"
+                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
                   value={productFilterCategory}
                   onChange={(e) => { setProductFilterCategory(e.target.value); setProductPage(1); }}
                 >
@@ -227,7 +227,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
               </div>
               <button 
                 onClick={() => { setEditingProduct(null); setIsFormOpen(true); }} 
-                className="flex-[40] bg-blue-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-blue-100 active:scale-95 transition-all"
+                className="flex-[40] bg-orange-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-orange-100 active:scale-95 transition-all"
               >
                 <i className="fas fa-plus"></i> <span className="truncate">Tambah</span>
               </button>
@@ -240,7 +240,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
             {/* Category Selection Dropdown */}
             <div className="relative group">
               <select 
-                className="w-10 h-10 bg-blue-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-blue-300 text-[10px] font-bold text-transparent transition-all cursor-pointer"
+                className="w-10 h-10 bg-orange-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-orange-300 text-[10px] font-bold text-transparent transition-all cursor-pointer"
                 value={bulkCategory}
                 onChange={e => setBulkCategory(e.target.value)}
                 title="Pilih Kategori Baru"
@@ -248,7 +248,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
                 <option value="" disabled>Kategori...</option>
                 {categories.map(cat => <option key={cat} value={cat} className="text-gray-900">{cat}</option>)}
               </select>
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-blue-500 group-hover:text-blue-700 transition-colors">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-orange-500 group-hover:text-orange-700 transition-colors">
                 <i className="fas fa-tag text-xs"></i>
               </div>
             </div>
@@ -257,7 +257,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
             <button 
               onClick={handleBulkCategory}
               disabled={!bulkCategory}
-              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              className="w-10 h-10 bg-orange-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-orange-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
               title="Ubah Kategori Produk"
             >
               <i className="fas fa-save text-xs"></i>
@@ -277,7 +277,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
             {/* Count Badge (Click to Cancel) */}
             <button 
               onClick={() => setSelectedProducts(new Set())}
-              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-blue-200 active:scale-95 transition-all group relative overflow-hidden"
+              className="w-10 h-10 bg-orange-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-orange-200 active:scale-95 transition-all group relative overflow-hidden"
               title="Klik untuk Batalkan Pilihan"
             >
               <span className="text-[10px] font-black group-hover:hidden">{selectedProducts.size}</span>
@@ -296,7 +296,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
                      {hasBulkAccess && (
                        <input 
                          type="checkbox" 
-                         className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
+                         className="w-4 h-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500 cursor-pointer" 
                          checked={filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length} 
                          onChange={(e) => handleSelectAll(e.target.checked)} 
                        />

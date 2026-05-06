@@ -62,7 +62,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
       {/* Sticky Header */}
       <div className="sticky top-0 z-20 bg-white/95 backdrop-blur-md p-4 border-b border-gray-50 flex justify-between items-center shrink-0">
         <h2 className="text-lg font-black text-gray-800 flex items-center gap-2">
-          <i className="fas fa-shopping-basket text-blue-600"></i> {readOnly ? 'Isi Keranjang' : 'Keranjang'}
+          <i className="fas fa-shopping-basket text-orange-600"></i> {readOnly ? 'Isi Keranjang' : 'Keranjang'}
         </h2>
         {items.length > 0 && !readOnly && (
           <button 
@@ -87,15 +87,15 @@ const Keranjang: React.FC<KeranjangProps> = ({
               <div key={item.id} className="flex items-center gap-4 py-4 first:pt-0 last:pb-0">
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-gray-800 truncate text-xs leading-tight">{item.name}</h4>
-                  <p className="text-blue-600 font-black text-[10px] mt-1">Rp{item.price.toLocaleString('id-ID')}</p>
+                  <p className="text-orange-600 font-black text-[10px] mt-1">Rp{item.price.toLocaleString('id-ID')}</p>
                 </div>
                 
                 <div className={`flex items-center gap-1 bg-gray-50 rounded-xl p-1 h-fit shrink-0 border border-gray-100 ml-auto ${readOnly ? 'opacity-60 pointer-events-none' : ''}`}>
-                  <button onClick={() => !readOnly && onUpdateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors">
+                  <button onClick={() => !readOnly && onUpdateQuantity(item.id, -1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-orange-600 transition-colors">
                     <i className="fas fa-minus text-[8px]"></i>
                   </button>
                   <input type="number" inputMode="numeric" readOnly={readOnly} max={item.stock} className="w-8 bg-transparent text-center font-black text-xs focus:outline-none text-gray-700" value={item.quantity || ''} onChange={(e) => { if (readOnly) return; const val = parseInt(e.target.value); if (!isNaN(val) && val >= 0) onSetQuantity(item.id, val); }} />
-                  <button disabled={item.quantity >= item.stock} onClick={() => !readOnly && onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-blue-600 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400">
+                  <button disabled={item.quantity >= item.stock} onClick={() => !readOnly && onUpdateQuantity(item.id, 1)} className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-orange-600 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-400">
                     <i className="fas fa-plus text-[8px]"></i>
                   </button>
                 </div>
@@ -131,7 +131,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
             <button 
               disabled={readOnly}
               onClick={() => !readOnly && setShowBuyerForm(!showBuyerForm)}
-              className={`w-full flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50/50 px-4 py-2.5 rounded-xl border border-blue-100/50 hover:bg-blue-50 transition-colors ${readOnly ? 'opacity-50 grayscale' : ''}`}
+              className={`w-full flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-orange-600 bg-orange-50/50 px-4 py-2.5 rounded-xl border border-orange-100/50 hover:bg-orange-50 transition-colors ${readOnly ? 'opacity-50 grayscale' : ''}`}
             >
               <span><i className="fas fa-user-tag mr-2 opacity-70"></i> Data Pembeli</span>
               {!readOnly && <i className={`fas fa-chevron-${showBuyerForm ? 'up' : 'down'} text-[8px] opacity-70`}></i>}
@@ -146,7 +146,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
                   <input 
                     type="text" 
                     placeholder="Ketik Nama Pembeli..." 
-                    className="w-full bg-white border border-gray-200 px-4 h-11 rounded-xl text-xs font-bold outline-none focus:border-blue-300 transition-all shadow-sm" 
+                    className="w-full bg-white border border-gray-200 px-4 h-11 rounded-xl text-xs font-bold outline-none focus:border-orange-300 transition-all shadow-sm" 
                     value={buyerName} 
                     onChange={(e) => { 
                       setBuyerName(e.target.value);
@@ -159,7 +159,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
                         <button 
                           key={c.id} 
                           onClick={() => handleSelectCustomer(c)}
-                          className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors"
+                          className="w-full text-left px-4 py-3 hover:bg-orange-50 transition-colors"
                         >
                           <p className="text-xs font-black text-gray-800">{c.name}</p>
                           <p className="text-[10px] text-gray-400">{c.phone}</p>
@@ -176,7 +176,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
                   <input 
                     type="tel" 
                     placeholder="088855556666" 
-                    className="w-full bg-white border border-gray-200 px-3 h-11 rounded-xl text-xs font-bold outline-none focus:border-blue-300 transition-all shadow-sm text-center" 
+                    className="w-full bg-white border border-gray-200 px-3 h-11 rounded-xl text-xs font-bold outline-none focus:border-orange-300 transition-all shadow-sm text-center" 
                     value={buyerPhone} 
                     onChange={(e) => setBuyerPhone(e.target.value)} 
                   />
@@ -200,7 +200,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
                     }
                   }}
                   disabled={!buyerName || !buyerPhone}
-                  className="flex-[0.3] bg-emerald-500 text-white h-11 rounded-xl font-black uppercase tracking-tighter shadow-sm shadow-emerald-100 active:scale-95 transition-all disabled:opacity-30 flex flex-col items-center justify-center gap-0"
+                  className="flex-[0.3] bg-orange-500 text-white h-11 rounded-xl font-black uppercase tracking-tighter shadow-sm shadow-orange-100 active:scale-95 transition-all disabled:opacity-30 flex flex-col items-center justify-center gap-0"
                 >
                   <span className="text-[9px]">SIMPAN</span>
                   <span className="text-[7px] opacity-80 leading-none">(Opsional)</span>
@@ -240,7 +240,7 @@ const Keranjang: React.FC<KeranjangProps> = ({
           <div>
             <span className="font-black text-gray-800 text-xs uppercase tracking-widest block">Total Bayar</span>
           </div>
-          <span className="text-2xl font-black text-blue-700 tracking-tighter">Rp {total.toLocaleString()}</span>
+          <span className="text-2xl font-black text-orange-700 tracking-tighter">Rp {total.toLocaleString()}</span>
         </div>
 
         <div className="flex gap-3">
@@ -248,13 +248,13 @@ const Keranjang: React.FC<KeranjangProps> = ({
             <button 
               disabled={items.length === 0}
               onClick={handleCheckout}
-              className="w-[70%] bg-blue-600 text-white h-14 rounded-2xl font-black text-xs uppercase tracking-[0.1em] disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-blue-200 active:scale-95 transition-all"
+              className="w-[70%] bg-orange-600 text-white h-14 rounded-2xl font-black text-xs uppercase tracking-[0.1em] disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-orange-200 active:scale-95 transition-all"
             >
               <i className="fas fa-print text-sm opacity-70"></i> 
               <span>Selesai & Cetak</span>
             </button>
           ) : (
-            <div className="w-[70%] bg-blue-50 text-blue-400 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border border-blue-100 opacity-60">
+            <div className="w-[70%] bg-orange-50 text-orange-400 h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 border border-orange-100 opacity-60">
               <i className="fas fa-info-circle"></i>
               <span>Hanya Lihat</span>
             </div>

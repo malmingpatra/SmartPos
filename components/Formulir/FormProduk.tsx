@@ -70,7 +70,7 @@ const FormProduk: React.FC<FormProdukProps> = ({ product, onClose, onSave, onDel
       <div className="flex flex-col gap-3 pt-4">
         <div className="flex gap-3">
           <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-100 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-          <button type="submit" className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-blue-100">Simpan</button>
+          <button type="submit" className="flex-1 px-4 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-orange-100">Simpan</button>
         </div>
         {product && onDelete && (
           <button 

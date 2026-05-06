@@ -234,7 +234,7 @@ const App: React.FC = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-600 border-opacity-20 border-t-blue-600 mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-orange-600 border-opacity-20 border-t-orange-600 mb-4"></div>
         <p className="text-gray-400 font-bold text-sm tracking-widest uppercase animate-pulse">Tunggu Sebentar...</p>
       </div>
     );
@@ -255,13 +255,13 @@ const App: React.FC = () => {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setShowContactLinks(true)}
-                className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-100 shrink-0 hover:bg-blue-700 active:scale-95 transition-all group"
+                className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-100 shrink-0 hover:bg-orange-700 active:scale-95 transition-all group"
               >
                 <i className="fas fa-headset text-sm group-hover:rotate-12 transition-transform"></i>
               </button>
               {user && (
                 <div className="flex flex-col items-start gap-1">
-                  <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest border border-blue-100 bg-blue-50 text-blue-600 leading-none`}>
+                  <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black uppercase tracking-widest border border-orange-100 bg-orange-50 text-orange-600 leading-none`}>
                     {user.role}
                   </span>
                   <button 
@@ -299,7 +299,7 @@ const App: React.FC = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => (document.getElementById('login-modal') as any).showModal()}
-                    className="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-sm hover:bg-blue-700 transition-colors flex items-center gap-2"
+                    className="bg-orange-600 text-white px-5 py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest shadow-sm hover:bg-orange-700 transition-colors flex items-center gap-2"
                   >
                     <i className="fas fa-lock"></i>
                     Masuk
@@ -421,10 +421,9 @@ const App: React.FC = () => {
               exit={{ scale: 0.9, opacity: 0 }}
               className="relative bg-white w-full max-w-sm rounded-[2rem] p-8 shadow-2xl border border-gray-100 overflow-hidden"
             >
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-blue-600"></div>
               
               <div className="mb-6 text-center">
-                <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-blue-100">
+                <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-orange-100">
                   <i className="fas fa-key text-xl"></i>
                 </div>
                 <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">Ganti PIN</h3>
@@ -440,7 +439,7 @@ const App: React.FC = () => {
                     value={newPin}
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
                     placeholder="Min 3 Digit"
-                    className="bg-transparent text-2xl text-center w-full focus:outline-none font-black tracking-[0.3em] text-blue-600 placeholder:text-gray-200"
+                    className="bg-transparent text-2xl text-center w-full focus:outline-none font-black tracking-[0.3em] text-orange-600 placeholder:text-gray-200"
                     maxLength={12}
                     autoFocus
                   />
@@ -456,7 +455,7 @@ const App: React.FC = () => {
                   <button 
                     disabled={newPin.length < 3 || isUpdatingPin}
                     onClick={handleUpdatePin}
-                    className="flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-blue-600 text-white shadow-lg shadow-blue-200 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none hover:bg-blue-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-orange-600 text-white shadow-lg shadow-orange-200 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none hover:bg-orange-700 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     {isUpdatingPin ? (
                        <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
@@ -512,14 +511,14 @@ const App: React.FC = () => {
                       {isActive && (
                         <motion.div 
                           layoutId="nav-pill"
-                          className="absolute inset-0 bg-blue-600 rounded-xl shadow-md shadow-blue-200"
+                          className="absolute inset-0 bg-orange-600 rounded-xl shadow-md shadow-orange-200"
                           transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
                         />
                       )}
                       
                       <div className="relative mb-0.5">
                         <i className={`fas ${tab.icon} relative z-10 transition-all duration-300 ${
-                          isActive ? 'text-white scale-110' : 'text-gray-400 text-base group-hover:text-blue-500'
+                          isActive ? 'text-white scale-110' : 'text-gray-400 text-base group-hover:text-orange-500'
                         }`}></i>
                         
                         {tab.id === 'cart_toggle' && cart.length > 0 && !isActive && (
@@ -558,7 +557,7 @@ const App: React.FC = () => {
             <div className="mt-6 flex gap-2">
               <button 
                 onClick={() => window.print()}
-                className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-bold text-sm"
+                className="flex-1 bg-orange-600 text-white py-3 rounded-lg font-bold text-sm"
               >
                 Cetak Nota
               </button>

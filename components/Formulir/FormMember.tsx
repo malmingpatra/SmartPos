@@ -56,7 +56,7 @@ const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin =
           <div>
             <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Petugas Penanggung Jawab</label>
             <select 
-              className="w-full bg-blue-50/50 border border-blue-100 p-3 rounded-xl focus:outline-none transition font-bold text-blue-800"
+              className="w-full bg-orange-50/50 border border-orange-100 p-3 rounded-xl focus:outline-none transition font-bold text-orange-800"
               value={formData.created_by}
               onChange={(e) => handleOwnerChange(e.target.value)}
             >
@@ -79,7 +79,7 @@ const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin =
       <div className="flex flex-col gap-3 pt-6">
         <div className="flex gap-3">
           <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-          <button type="submit" className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-black text-xs uppercase">SIMPAN</button>
+          <button type="submit" className="flex-1 px-4 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase">SIMPAN</button>
         </div>
         {customer && onDelete && (
           <button 

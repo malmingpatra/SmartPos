@@ -104,8 +104,8 @@ const LoginPin: React.FC<LoginPinProps> = ({ onLogin, onCancel }) => {
         }}
         className={`${baseNumClass} ${extraClass} ${
           isActive 
-            ? 'scale-90 bg-blue-600 text-white border-blue-600' 
-            : (extraClass.includes('text-red') ? 'bg-red-50 border-red-100' : extraClass.includes('text-gray-400') ? 'bg-transparent border-transparent' : 'bg-white text-gray-700 hover:border-blue-100')
+            ? 'scale-90 bg-orange-600 text-white border-orange-600' 
+            : (extraClass.includes('text-red') ? 'bg-red-50 border-red-100' : extraClass.includes('text-gray-400') ? 'bg-transparent border-transparent' : 'bg-white text-gray-700 hover:border-orange-100')
         }`}
         style={{ WebkitTouchCallout: 'none' }}
       >
@@ -128,13 +128,13 @@ const LoginPin: React.FC<LoginPinProps> = ({ onLogin, onCancel }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value.toLowerCase())}
               disabled={isLocked}
-              className={`w-full bg-gray-50 border border-gray-100 py-3.5 pl-10 pr-4 rounded-xl text-[10px] font-black lowercase tracking-widest focus:ring-4 focus:ring-blue-50 outline-none transition-all ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
+              className={`w-full bg-gray-50 border border-gray-100 py-3.5 pl-10 pr-4 rounded-xl text-[10px] font-black lowercase tracking-widest focus:ring-4 focus:ring-orange-50 outline-none transition-all ${isLocked ? 'opacity-60 cursor-not-allowed' : ''}`}
             />
           </div>
           <button 
             type="button"
             onClick={handleToggleLock}
-            className={`w-12 rounded-xl flex items-center justify-center transition-all ${isLocked ? 'bg-blue-600 text-white shadow-lg shadow-blue-100' : 'bg-gray-50 text-gray-300 border border-gray-100'}`}
+            className={`w-12 rounded-xl flex items-center justify-center transition-all ${isLocked ? 'bg-orange-600 text-white shadow-lg shadow-orange-100' : 'bg-gray-50 text-gray-300 border border-gray-100'}`}
             title="Kunci Username"
           >
             <i className={`fas ${isLocked ? 'fa-lock' : 'fa-lock-open'} text-[10px]`}></i>
@@ -142,15 +142,15 @@ const LoginPin: React.FC<LoginPinProps> = ({ onLogin, onCancel }) => {
         </div>
 
         {/* PIN Indicator (1 Row) */}
-        <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100/50 mb-2 w-full">
+        <div className="bg-orange-50/50 p-4 rounded-2xl border border-orange-100/50 mb-2 w-full">
           <div className="flex justify-center gap-2 items-center">
             {Array.from({ length: 12 }).map((_, i) => (
               <div 
                 key={i} 
                 className={`w-2 h-2 rounded-full border-2 transition-all duration-300 ${
                   i < pin.length 
-                    ? 'bg-blue-600 border-blue-600 scale-125' 
-                    : 'bg-transparent border-blue-100'
+                    ? 'bg-orange-600 border-orange-600 scale-125' 
+                    : 'bg-transparent border-orange-100'
                 }`}
               ></div>
             ))}
@@ -201,7 +201,7 @@ const LoginPin: React.FC<LoginPinProps> = ({ onLogin, onCancel }) => {
           disabled={pin.length < 3 || loading || !username}
           className={`w-full py-4 rounded-[2rem] font-black text-[10px] tracking-[0.2em] flex items-center justify-center gap-3 select-none outline-none transition-all ${
             pin.length >= 3 && !loading && username
-              ? 'bg-blue-600 text-white shadow-xl shadow-blue-100 active:scale-95' 
+              ? 'bg-orange-600 text-white shadow-xl shadow-orange-100 active:scale-95' 
               : 'bg-gray-100 text-gray-300 cursor-not-allowed'
           }`}
         >

@@ -32,7 +32,7 @@ const ContactLinksModal: React.FC<ContactLinksModalProps> = ({ isOpen, onClose, 
             >
               {/* Header */}
               <div className="bg-gray-50 px-6 py-5 text-center border-b border-gray-100 shrink-0">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto flex items-center justify-center text-white shadow-lg shadow-blue-100 mb-3 animate-bounce">
+                <div className="w-12 h-12 bg-orange-600 rounded-xl mx-auto flex items-center justify-center text-white shadow-lg shadow-orange-100 mb-3 animate-bounce">
                   <i className="fas fa-headset text-xl"></i>
                 </div>
                 <h3 className="text-sm font-black text-gray-800 uppercase tracking-tight">Hubungi Kami</h3>
@@ -73,7 +73,7 @@ const ContactLinksModal: React.FC<ContactLinksModalProps> = ({ isOpen, onClose, 
               <div className="px-5 pb-5 pt-2 shrink-0">
                 <button
                   onClick={onClose}
-                  className="w-full py-3.5 rounded-2xl bg-gray-900 text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-lg active:scale-95 transition-all"
+                  className="w-full py-3.5 rounded-2xl bg-orange-600 text-white font-black text-[9px] uppercase tracking-[0.2em] shadow-lg shadow-orange-100 active:scale-95 transition-all"
                 >
                   Tutup
                 </button>

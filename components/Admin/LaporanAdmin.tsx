@@ -225,7 +225,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
                 <button 
                   key={period} 
                   onClick={() => setReportPeriod(period)} 
-                  className={`flex-1 px-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${reportPeriod === period ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}`}
+                  className={`flex-1 px-1 py-2 rounded-lg text-[9px] font-black uppercase tracking-tight transition-all ${reportPeriod === period ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-400'}`}
                 >
                   {period === 'today' ? 'Hari Ini' : period === '7days' ? '7 Hari' : period === 'month' ? 'Bulan Ini' : 'Tanggal'}
                 </button>
@@ -238,14 +238,14 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
                   type="date" 
                   value={customRange.start}
                   onChange={(e) => setCustomRange(prev => ({ ...prev, start: e.target.value }))}
-                  className="flex-1 bg-white border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-bold focus:outline-none focus:border-blue-300 transition-colors"
+                  className="flex-1 bg-white border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-bold focus:outline-none focus:border-orange-300 transition-colors"
                 />
                 <span className="text-gray-300 text-[10px]"><i className="fas fa-arrow-right"></i></span>
                 <input 
                   type="date" 
                   value={customRange.end}
                   onChange={(e) => setCustomRange(prev => ({ ...prev, end: e.target.value }))}
-                  className="flex-1 bg-white border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-bold focus:outline-none focus:border-blue-300 transition-colors"
+                  className="flex-1 bg-white border border-gray-100 rounded-xl px-3 py-1.5 text-[10px] font-bold focus:outline-none focus:border-orange-300 transition-colors"
                 />
               </div>
             )}
@@ -253,7 +253,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
           
           <button 
             onClick={() => window.print()} 
-            className="w-full bg-gray-900 text-white h-10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all"
+            className="w-full bg-orange-600 text-white h-10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-orange-100 active:scale-95 transition-all"
           >
             <i className="fas fa-print"></i> Cetak Laporan
           </button>
@@ -264,7 +264,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       <div className="flex gap-3 px-1 no-print">
         <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center w-[70%]">
           <p className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Pendapatan</p>
-          <p className="text-lg font-black text-blue-700 mt-1">Rp {stats.total_revenue.toLocaleString()}</p>
+          <p className="text-lg font-black text-orange-700 mt-1">Rp {stats.total_revenue.toLocaleString()}</p>
         </div>
         <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center w-[30%]">
           <p className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Transaksi</p>
@@ -312,7 +312,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
               {stats.topProducts.map((p, i) => (
                 <tr key={i}>
                   <td className="py-3 font-medium text-gray-700">{p.name}</td>
-                  <td className="py-3 text-center font-black text-blue-600">{p.quantity}</td>
+                  <td className="py-3 text-center font-black text-orange-600">{p.quantity}</td>
                 </tr>
               ))}
               {stats.topProducts.length === 0 && (

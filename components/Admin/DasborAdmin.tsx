@@ -97,7 +97,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
                   ? 'bg-emerald-600 border-emerald-500 text-white' 
                   : n.type === 'error' 
                     ? 'bg-red-600 border-red-500 text-white' 
-                    : 'bg-blue-600 border-blue-500 text-white'
+                    : 'bg-orange-600 border-orange-500 text-white'
               }`}>
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
@@ -135,7 +135,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
           <div className="bg-white/90 backdrop-blur-xl p-1.5 rounded-2xl border border-gray-100 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.1)] flex items-center relative h-14 translate-y-1">
             
             <div 
-              className="absolute bg-blue-50/80 rounded-xl transition-all duration-300 ease-out z-0"
+              className="absolute bg-orange-50/80 rounded-xl transition-all duration-300 ease-out z-0"
               style={{ 
                 top: '6px',
                 bottom: '6px',
@@ -145,31 +145,31 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
             ></div>
 
             {allowedTabs.includes('products') && (
-              <button onClick={() => setActiveTab('products')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'products' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+              <button onClick={() => setActiveTab('products')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'products' ? 'text-orange-600' : 'text-gray-400 active:scale-95'}`}>
                 <i className="fas fa-box text-sm"></i>
                 <span className="text-[8px] font-black uppercase tracking-tighter">Produk</span>
               </button>
             )}
             {allowedTabs.includes('users') && (
-              <button onClick={() => setActiveTab('users')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'users' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+              <button onClick={() => setActiveTab('users')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'users' ? 'text-orange-600' : 'text-gray-400 active:scale-95'}`}>
                 <i className="fas fa-user-shield text-sm"></i>
                 <span className="text-[8px] font-black uppercase tracking-tighter">Staff</span>
               </button>
             )}
             {allowedTabs.includes('customers') && (
-              <button onClick={() => setActiveTab('customers')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'customers' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+              <button onClick={() => setActiveTab('customers')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'customers' ? 'text-orange-600' : 'text-gray-400 active:scale-95'}`}>
                 <i className="fas fa-users text-sm"></i>
                 <span className="text-[8px] font-black uppercase tracking-tighter">Member</span>
               </button>
             )}
             {allowedTabs.includes('reports') && (
-              <button onClick={() => setActiveTab('reports')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'reports' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+              <button onClick={() => setActiveTab('reports')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'reports' ? 'text-orange-600' : 'text-gray-400 active:scale-95'}`}>
                 <i className="fas fa-chart-bar text-sm"></i>
                 <span className="text-[8px] font-black uppercase tracking-tighter">Laporan</span>
               </button>
             )}
             {allowedTabs.includes('support') && (
-              <button onClick={() => setActiveTab('support')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'support' ? 'text-blue-600' : 'text-gray-400 active:scale-95'}`}>
+              <button onClick={() => setActiveTab('support')} className={`relative z-10 flex-1 flex flex-col items-center justify-center gap-0.5 transition-all duration-300 ${activeTab === 'support' ? 'text-orange-600' : 'text-gray-400 active:scale-95'}`}>
                 <i className="fas fa-headset text-sm"></i>
                 <span className="text-[8px] font-black uppercase tracking-tighter">Support</span>
               </button>

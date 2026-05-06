@@ -105,7 +105,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
               <input 
                 type="text" 
                 placeholder="Cari staf..." 
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
                 value={userSearch} 
                 onChange={(e) => { setUserSearch(e.target.value); setUserPage(1); }} 
               />
@@ -113,7 +113,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
             <div className="flex gap-3 w-full h-11">
               <div className="flex-[60] relative h-full">
                 <select 
-                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all font-sans"
+                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all font-sans"
                   value={userFilterRole}
                   onChange={(e) => { setUserFilterRole(e.target.value); setUserPage(1); }}
                 >
@@ -126,7 +126,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
               </div>
               <button 
                 onClick={() => { setEditingUser(null); setIsFormOpen(true); }} 
-                className="flex-[40] bg-emerald-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-emerald-100 active:scale-95 transition-all"
+                className="flex-[40] bg-orange-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-orange-100 active:scale-95 transition-all"
               >
                 <i className="fas fa-user-plus"></i> <span className="truncate">Tambah</span>
               </button>
@@ -139,7 +139,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
             {/* Role Selection Dropdown */}
             <div className="relative group">
               <select 
-                className="w-10 h-10 bg-blue-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-blue-300 text-[10px] font-bold text-transparent transition-all cursor-pointer font-sans"
+                className="w-10 h-10 bg-orange-50/50 border border-transparent rounded-lg appearance-none focus:outline-none focus:border-orange-300 text-[10px] font-bold text-transparent transition-all cursor-pointer font-sans"
                 value={bulkRole}
                 onChange={e => setBulkRole(e.target.value as Role)}
                 title="Pilih Role Baru"
@@ -147,7 +147,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                 <option value="" disabled>Role...</option>
                 {Object.values(Role).map(role => <option key={role} value={role} className="text-gray-900">{role}</option>)}
               </select>
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-blue-500 group-hover:text-blue-700 transition-colors">
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-orange-500 group-hover:text-orange-700 transition-colors">
                 <i className="fas fa-user-tag text-xs"></i>
               </div>
             </div>
@@ -156,7 +156,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
             <button 
               onClick={handleBulkChangeRole}
               disabled={!bulkRole}
-              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-blue-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
+              className="w-10 h-10 bg-orange-600 text-white rounded-lg flex items-center justify-center shadow-md shadow-orange-200 active:scale-90 transition-all disabled:opacity-30 disabled:grayscale"
               title="Ubah Role Staf"
             >
               <i className="fas fa-save text-xs"></i>
@@ -176,7 +176,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
             {/* Count Badge (Click to Cancel) */}
             <button 
               onClick={() => { setSelectedUserIds([]); setBulkRole(''); }}
-              className="w-10 h-10 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-blue-200 active:scale-95 transition-all group relative overflow-hidden"
+              className="w-10 h-10 bg-orange-600 text-white rounded-lg flex flex-col items-center justify-center shadow-md shadow-orange-200 active:scale-95 transition-all group relative overflow-hidden"
               title="Klik untuk Batalkan Pilihan"
             >
               <span className="text-[10px] font-black group-hover:hidden">{selectedUserIds.length}</span>
@@ -193,7 +193,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                   <th className="px-4 py-4 w-[10%] text-center">
                     <input 
                       type="checkbox" 
-                      className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
                       checked={selectedUserIds.length > 0 && selectedUserIds.length === pagedUsers.length}
                       onChange={handleToggleSelectAll}
                     />
@@ -204,11 +204,11 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
               </thead>
               <tbody className="divide-y text-sm">
                 {pagedUsers.map(u => (
-                  <tr key={u.id} className={`hover:bg-gray-50/50 transition-colors ${selectedUserIds.includes(u.id) ? 'bg-blue-50/30' : ''}`}>
+                  <tr key={u.id} className={`hover:bg-gray-50/50 transition-colors ${selectedUserIds.includes(u.id) ? 'bg-orange-50/30' : ''}`}>
                     <td className="px-4 py-4 w-[10%] text-center">
                       <input 
                         type="checkbox" 
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        className="w-4 h-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
                         checked={selectedUserIds.includes(u.id)}
                         onChange={() => handleToggleSelectOne(u.id)}
                       />
@@ -222,7 +222,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                           </span>
                           <span className={`inline-flex items-center px-1.5 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest border ${
                             u.role === Role.ADMIN ? 'bg-purple-50 text-purple-600 border-purple-100' :
-                            u.role === Role.KASIR ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                            u.role === Role.KASIR ? 'bg-orange-50 text-orange-600 border-orange-100' :
                             u.role === Role.SALES ? 'bg-green-50 text-green-600 border-green-100' :
                             u.role === Role.GUDANG_MASTER ? 'bg-orange-50 text-orange-600 border-orange-100' :
                             u.role === Role.MANAGER ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
@@ -236,7 +236,7 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                     </td>
                     <td className="px-4 md:px-6 py-4 text-center">
                       <div className="flex justify-center gap-1 md:gap-2">
-                        <button onClick={() => { setEditingUser(u); setIsFormOpen(true); }} className="text-blue-500 hover:bg-blue-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-edit text-xs"></i></button>
+                        <button onClick={() => { setEditingUser(u); setIsFormOpen(true); }} className="text-orange-500 hover:bg-orange-50 w-8 h-8 rounded-lg transition flex items-center justify-center"><i className="fas fa-edit text-xs"></i></button>
                       </div>
                     </td>
                   </tr>

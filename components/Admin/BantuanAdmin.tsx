@@ -77,7 +77,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
         </div>
         <button
           onClick={() => setEditingLink({ name: '', url: '', icon: 'fab fa-whatsapp', color: '#25D366', order: links.length + 1 })}
-          className="bg-blue-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-blue-100 active:scale-95 transition-all"
+          className="bg-orange-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-orange-100 active:scale-95 transition-all"
         >
           <i className="fas fa-plus"></i>
         </button>
@@ -89,10 +89,10 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white p-6 rounded-3xl border border-blue-100 shadow-xl mx-1"
+            className="bg-white p-6 rounded-3xl border border-orange-100 shadow-xl mx-1"
           >
             <form onSubmit={handleSave} className="space-y-4">
-              <h3 className="text-xs font-black text-blue-600 uppercase tracking-widest mb-2">Editor Link</h3>
+              <h3 className="text-xs font-black text-orange-600 uppercase tracking-widest mb-2">Editor Link</h3>
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
@@ -102,7 +102,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
                     value={editingLink.name}
                     onChange={e => setEditingLink({...editingLink, name: e.target.value})}
                     placeholder="Contoh: WhatsApp CS"
-                    className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-blue-100"
+                    className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -113,7 +113,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
                     value={editingLink.icon}
                     onChange={e => setEditingLink({...editingLink, icon: e.target.value})}
                     placeholder="fab fa-whatsapp"
-                    className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-blue-100"
+                    className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-orange-100"
                     required
                   />
                 </div>
@@ -126,7 +126,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
                   value={editingLink.url}
                   onChange={e => setEditingLink({...editingLink, url: e.target.value})}
                   placeholder="https://wa.me/..."
-                  className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-blue-100"
+                  className="w-full bg-gray-50 border-none rounded-xl px-4 py-3 text-xs font-bold focus:ring-2 focus:ring-orange-100"
                   required
                 />
               </div>
@@ -170,7 +170,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-[2] py-3 rounded-xl bg-blue-600 text-white font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-blue-100"
+                  className="flex-[2] py-3 rounded-xl bg-orange-600 text-white font-bold text-[10px] uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-orange-100"
                 >
                   Simpan Link
                 </button>
@@ -189,7 +189,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
           links.map(link => (
             <div 
               key={link.id}
-              className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-blue-100 transition-all"
+              className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-orange-100 transition-all"
             >
               <div className="flex items-center gap-4">
                 <div 
@@ -206,7 +206,7 @@ const AdminSupport: React.FC<AdminSupportProps> = ({ addLog }) => {
               <div className="flex gap-1">
                 <button 
                   onClick={() => setEditingLink(link)}
-                  className="w-8 h-8 rounded-lg bg-gray-50 text-gray-400 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center transition-all"
+                  className="w-8 h-8 rounded-lg bg-gray-50 text-gray-400 hover:bg-orange-50 hover:text-orange-600 flex items-center justify-center transition-all"
                 >
                   <i className="fas fa-edit text-[10px]"></i>
                 </button>
