@@ -4,13 +4,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Role, User, Product, CartItem, Order, Customer, normalizeRole } from './types';
 import { supabaseService } from './supabase';
 import { APP_CONFIG } from './constants';
-import LoginPin from './components/LoginPin';
-import Katalog from './components/Katalog';
-import Keranjang from './components/Keranjang';
-import AdminDashboard from './components/AdminDashboard';
-import Riwayat from './components/Riwayat';
-import Struk from './components/Struk';
-import ContactLinksModal from './components/ContactLinksModal';
+import LoginPin from './components/Otentikasi/LoginPin';
+import Katalog from './components/Kasir/Katalog';
+import Keranjang from './components/Kasir/Keranjang';
+import DasborAdmin from './components/Admin/DasborAdmin';
+import Riwayat from './components/Kasir/Riwayat';
+import Struk from './components/Kasir/Struk';
+import ModalKontak from './components/Umum/ModalKontak';
 import { ContactLink } from './types';
 
 const App: React.FC = () => {
@@ -243,7 +243,7 @@ const App: React.FC = () => {
   return (
     <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative print:block print:h-auto print:overflow-visible print:static">
       {/* 4. REFINED BOX GLASS HEADER */}
-      <ContactLinksModal 
+      <ModalKontak 
         isOpen={showContactLinks} 
         onClose={() => setShowContactLinks(false)} 
         links={contactLinks} 
@@ -334,7 +334,7 @@ const App: React.FC = () => {
             )}
             {view === 'admin' && user && (
               <div className="pb-24">
-                <AdminDashboard 
+                <DasborAdmin 
                   products={products} 
                   onProductsChange={async () => setProducts(await supabaseService.getProducts())}
                   orders={orders}
