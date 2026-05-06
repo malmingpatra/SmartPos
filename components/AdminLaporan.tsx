@@ -15,6 +15,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   const [customRange, setCustomRange] = useState({ start: '', end: '' });
 
   const [staffSort, setStaffSort] = useState<'name' | 'revenue'>('name');
+  const [showPreview, setShowPreview] = useState(false);
 
   const filteredOrders = useMemo(() => {
     const now = new Date();
@@ -147,84 +148,113 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
     return `${d}${m}${y}-${randLetter}${randDigits}`;
   }, []);
 
+  const renderReportContent = () => (
+    <table className="font-mono text-[10pt] leading-tight p-4 text-black w-full" style={{ width: '100%' }}>
+      <thead>
+        <tr>
+          <td>
+            <div className="text-center mb-6">
+              <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
+              <p className="text-[10pt]">{getReportDate()}</p>
+              <div className="h-px bg-black w-full my-2"></div>
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            {/* Bagian 1: PENJUALAN KOTOR */}
+            <div className="mb-6">
+              <h2 className="font-bold text-sm mb-3">DAFTAR PENJUALAN KOTOR</h2>
+              <div className="space-y-3">
+                {stats.detailedProducts.map((p, idx) => (
+                  <div key={idx} className="space-y-1">
+                    <div className="font-bold uppercase">{p.name}</div>
+                    <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                      <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
+                      <span className="w-1/3 text-center">x{p.quantity}</span>
+                      <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold">
+                <span className="uppercase">TOTAL PENJUALAN KOTOR</span>
+                <span>Rp {stats.total_gross_revenue.toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Bagian 2: RINCIAN DISKON */}
+            <div className="mb-6 mt-8">
+              <h2 className="font-bold text-sm mb-3">RINCIAN DISKON</h2>
+              <div className="space-y-2">
+                {stats.discountedOrders.length > 0 ? stats.discountedOrders.map((o, idx) => (
+                  <div key={idx} className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
+                    <span>{o.receipt_number}</span>
+                    <span className="text-right text-red-600">- Rp {o.discount.toLocaleString()}</span>
+                  </div>
+                )) : (
+                  <div className="text-gray-500 italic pb-1">Tidak ada diskon</div>
+                )}
+              </div>
+              <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold text-red-600">
+                <span className="uppercase">TOTAL DISKON</span>
+                <span>- Rp {stats.total_discount.toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Bagian 3: PENDAPATAN BERSIH */}
+            <div className="mb-4 mt-8 border-t-2 border-double border-black pt-2 flex flex-col">
+              <div className="flex justify-between items-center text-base font-black uppercase">
+                <span>PENDAPATAN BERSIH</span>
+                <span>Rp {stats.total_revenue.toLocaleString()}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>
+            <div className="text-right text-[8pt] opacity-50 mt-[50px]">
+              ID: {printIdPrefix}
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  );
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
-      {/* Print-Only Report Content (Hidden in UI) */}
-      <table className="hidden print-area font-mono text-[10pt] leading-tight p-4 bg-white text-black w-full" style={{ width: '100%' }}>
-        <thead>
-          <tr>
-            <td>
-              <div className="text-center mb-6">
-                <h1 className="text-base font-black uppercase mb-1">LAPORAN PENJUALAN</h1>
-                <p className="text-[10pt]">{getReportDate()}</p>
-                <div className="h-px bg-black w-full my-2"></div>
-              </div>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              {/* Bagian 1: PENJUALAN KOTOR */}
-              <div className="mb-6">
-                <h2 className="font-bold text-sm mb-3">DAFTAR PENJUALAN KOTOR</h2>
-                <div className="space-y-3">
-                  {stats.detailedProducts.map((p, idx) => (
-                    <div key={idx} className="space-y-1">
-                      <div className="font-bold uppercase">{p.name}</div>
-                      <div className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
-                        <span className="w-1/3 text-left">Rp {p.price.toLocaleString()}</span>
-                        <span className="w-1/3 text-center">x{p.quantity}</span>
-                        <span className="w-1/3 text-right font-bold">Rp {(p.price * p.quantity).toLocaleString()}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold">
-                  <span className="uppercase">TOTAL PENJUALAN KOTOR</span>
-                  <span>Rp {stats.total_gross_revenue.toLocaleString()}</span>
-                </div>
-              </div>
-
-              {/* Bagian 2: RINCIAN DISKON */}
-              <div className="mb-6 mt-8">
-                <h2 className="font-bold text-sm mb-3">RINCIAN DISKON</h2>
-                <div className="space-y-2">
-                  {stats.discountedOrders.length > 0 ? stats.discountedOrders.map((o, idx) => (
-                    <div key={idx} className="flex justify-between items-end border-b border-dashed border-gray-300 pb-1">
-                      <span>{o.receipt_number}</span>
-                      <span className="text-right text-red-600">- Rp {o.discount.toLocaleString()}</span>
-                    </div>
-                  )) : (
-                    <div className="text-gray-500 italic pb-1">Tidak ada diskon</div>
-                  )}
-                </div>
-                <div className="mt-4 border-t border-black pt-2 flex justify-between items-center font-bold text-red-600">
-                  <span className="uppercase">TOTAL DISKON</span>
-                  <span>- Rp {stats.total_discount.toLocaleString()}</span>
-                </div>
-              </div>
-
-              {/* Bagian 3: PENDAPATAN BERSIH */}
-              <div className="mb-4 mt-8 border-t-2 border-double border-black pt-2 flex flex-col">
-                <div className="flex justify-between items-center text-base font-black uppercase">
-                  <span>PENDAPATAN BERSIH</span>
-                  <span>Rp {stats.total_revenue.toLocaleString()}</span>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>
-              <div className="text-right text-[8pt] opacity-50 mt-[50px]">
-                ID: {printIdPrefix}
-              </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      
+      {showPreview && (
+        <div className="fixed inset-0 z-50 bg-gray-100/90 backdrop-blur-sm flex flex-col h-[100dvh] overflow-hidden no-print">
+          {/* Header Preview */}
+          <div className="bg-white px-4 py-3 flex items-center justify-between border-b shadow-sm shrink-0 z-10 w-full max-w-7xl mx-auto rounded-b-3xl mb-4">
+            <button onClick={() => setShowPreview(false)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors">
+               <i className="fas fa-times"></i>
+            </button>
+            <span className="font-bold text-sm text-gray-700 uppercase tracking-widest">Preview Laporan</span>
+            <button onClick={() => window.print()} className="h-10 px-6 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-blue-700 transition-all flex items-center justify-center">
+               <i className="fas fa-print mr-2"></i> Cetak
+            </button>
+          </div>
+          {/* Scrollable PDF Preview Container */}
+          <div className="flex-1 overflow-auto p-4 flex justify-center pb-20">
+             <div className="bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] w-full max-w-[210mm] min-h-[297mm] p-8 md:p-12 print-area print:p-0 print:shadow-none print:min-h-0">
+                 {renderReportContent()}
+             </div>
+          </div>
+        </div>
+      )}
+      
+      {!showPreview && (
+        <div className="hidden print-area">
+          {renderReportContent()}
+        </div>
+      )}
 
       {/* Sticky Filter Bar */}
       <div className="sticky top-16 z-20 no-print">
@@ -262,7 +292,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
           </div>
           
           <button 
-            onClick={() => window.print()} 
+            onClick={() => setShowPreview(true)} 
             className="w-full bg-gray-900 text-white h-10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all"
           >
             <i className="fas fa-print"></i> Cetak Laporan

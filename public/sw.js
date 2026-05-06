@@ -1,9 +1,10 @@
 
-const CACHE_NAME = 'smartpos-v2';
+const CACHE_NAME = 'smartpos-v3';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
-  '/manifest.json'
+  '/manifest.json',
+  '/nota-logo.jpeg'
 ];
 
 self.addEventListener('install', (event) => {
