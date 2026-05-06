@@ -34,26 +34,21 @@
       scrollbar-width: none;
     }
     @media print {
-      html, body {
+      html, body, #root {
         height: auto !important;
         overflow: visible !important;
-      }
-      body * {
-        visibility: hidden;
-      }
-      .print-area, .print-area * {
-        visibility: visible;
-      }
-      .print-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100% !important;
-        max-width: none !important;
-        display: block !important;
+        background: white !important;
       }
       .no-print {
         display: none !important;
+      }
+      .print-area {
+        display: block !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+      @page {
+        margin: 0.5cm;
       }
     }
     input::-webkit-outer-spin-button,

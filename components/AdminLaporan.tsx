@@ -15,7 +15,6 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   const [customRange, setCustomRange] = useState({ start: '', end: '' });
 
   const [staffSort, setStaffSort] = useState<'name' | 'revenue'>('name');
-  const [showPreview, setShowPreview] = useState(false);
 
   const filteredOrders = useMemo(() => {
     const now = new Date();
@@ -229,32 +228,9 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
       
-      {showPreview && (
-        <div className="fixed inset-0 z-50 bg-gray-100/90 backdrop-blur-sm flex flex-col h-[100dvh] overflow-hidden no-print">
-          {/* Header Preview */}
-          <div className="bg-white px-4 py-3 flex items-center justify-between border-b shadow-sm shrink-0 z-10 w-full max-w-7xl mx-auto rounded-b-3xl mb-4">
-            <button onClick={() => setShowPreview(false)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors">
-               <i className="fas fa-times"></i>
-            </button>
-            <span className="font-bold text-sm text-gray-700 uppercase tracking-widest">Preview Laporan</span>
-            <button onClick={() => window.print()} className="h-10 px-6 rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-blue-700 transition-all flex items-center justify-center">
-               <i className="fas fa-print mr-2"></i> Cetak
-            </button>
-          </div>
-          {/* Scrollable PDF Preview Container */}
-          <div className="flex-1 overflow-auto p-4 flex justify-center pb-20">
-             <div className="bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] w-full max-w-[210mm] min-h-[297mm] p-8 md:p-12 print-area print:p-0 print:shadow-none print:min-h-0">
-                 {renderReportContent()}
-             </div>
-          </div>
-        </div>
-      )}
-      
-      {!showPreview && (
-        <div className="hidden print-area">
-          {renderReportContent()}
-        </div>
-      )}
+      <div className="hidden print-area bg-white text-black p-4">
+        {renderReportContent()}
+      </div>
 
       {/* Sticky Filter Bar */}
       <div className="sticky top-16 z-20 no-print">
@@ -292,7 +268,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
           </div>
           
           <button 
-            onClick={() => setShowPreview(true)} 
+            onClick={() => window.print()} 
             className="w-full bg-gray-900 text-white h-10 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 active:scale-95 transition-all"
           >
             <i className="fas fa-print"></i> Cetak Laporan
@@ -301,7 +277,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       </div>
 
       {/* Stats Cards */}
-      <div className="flex gap-3 px-1">
+      <div className="flex gap-3 px-1 no-print">
         <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center w-[70%]">
           <p className="text-gray-400 text-[9px] font-black uppercase tracking-widest">Pendapatan</p>
           <p className="text-lg font-black text-blue-700 mt-1">Rp {stats.total_revenue.toLocaleString()}</p>
@@ -313,7 +289,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       </div>
 
       {/* Sales Trend Chart */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1">
+      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1 no-print">
         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Tren Penjualan</h3>
         <div className="h-[200px] w-full">
           <ResponsiveContainer width="100%" height="100%">
@@ -338,7 +314,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       </div>
 
       {/* Top Products Table */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1">
+      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1 no-print">
         <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4 text-center">Top 5 Produk Terlaris</h3>
         <div className="overflow-hidden">
           <table className="w-full text-left text-[11px]">
@@ -366,7 +342,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
       </div>
 
       {/* Staff Performance Table */}
-      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1">
+      <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm mx-1 no-print">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Penjualan per Staf</h3>
           <button 
