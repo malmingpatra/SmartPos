@@ -113,7 +113,7 @@ const AdminLaporan: React.FC<AdminLaporanProps> = ({ orders }) => {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 pb-10">
       {/* Print-Only Report Content (Hidden in UI) */}
-      <div className="hidden print:block font-mono text-[10pt] leading-tight p-4">
+      <div className="hidden print-area font-mono text-[10pt] leading-tight p-4 bg-white text-black">
         <div className="text-center mb-6">
           <h1 className="text-base font-black uppercase mb-1">SMART POS</h1>
           <p className="text-[10pt]">{getReportTitle()}</p>

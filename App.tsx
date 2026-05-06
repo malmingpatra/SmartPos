@@ -212,7 +212,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative">
+    <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative print:h-auto print:overflow-visible print:static">
       {/* 4. REFINED BOX GLASS HEADER */}
       <header className="fixed top-0 left-0 right-0 z-40 no-print p-2 pointer-events-none">
         <div className="max-w-5xl mx-auto w-full pointer-events-auto">
@@ -271,7 +271,7 @@ const App: React.FC = () => {
       <main 
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto p-4 pt-20 no-print scroll-smooth relative"
+        className="flex-1 overflow-auto p-4 pt-20 scroll-smooth relative print:overflow-visible print:p-0 print:pt-0 print:static"
       >
         <AnimatePresence mode="wait">
           <motion.div 
@@ -462,7 +462,7 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <div id="print-area" className="hidden">
+      <div className="hidden print-area">
         {showReceipt && <Struk order={showReceipt} />}
       </div>
     </div>
