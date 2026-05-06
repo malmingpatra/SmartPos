@@ -22,7 +22,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
   const filtered = useMemo(() => {
     let result = orders;
     const userRole = normalizeRole(user.role);
-    const canSeeAll = userRole === Role.ADMIN || userRole === Role.GUDANG;
+    const canSeeAll = userRole === Role.ADMIN || userRole === Role.GUDANG || userRole === Role.MANAGER || userRole === Role.GUDANG_MASTER;
     if (!canSeeAll) result = result.filter(o => o.user_id === user.id);
     if (canSeeAll && filterUser !== 'all') result = result.filter(o => o.user_name === filterUser);
     if (filterDate) result = result.filter(o => o.created_at.split('T')[0] === filterDate);
@@ -46,7 +46,7 @@ const Riwayat: React.FC<RiwayatProps> = ({ orders, user, onViewOrder }) => {
 
   const isFiltered = filterDate || searchQuery || (filterUser !== 'all');
   const userRole = normalizeRole(user.role);
-  const canSeeStaffFilter = userRole === Role.ADMIN || userRole === Role.GUDANG;
+  const canSeeStaffFilter = userRole === Role.ADMIN || userRole === Role.GUDANG || userRole === Role.MANAGER || userRole === Role.GUDANG_MASTER;
 
   return (
     <div className="space-y-4">

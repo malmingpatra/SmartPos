@@ -27,6 +27,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
   
   const allowedTabs = useMemo(() => {
     if (userRole === Role.ADMIN) return ['products', 'users', 'customers', 'reports'];
+    if (userRole === Role.MANAGER) return ['products', 'customers', 'reports'];
+    if (userRole === Role.GUDANG_MASTER) return ['products'];
     if (userRole === Role.GUDANG) return ['products'];
     if (userRole === Role.KASIR || userRole === Role.SALES) return ['customers'];
     return [];
@@ -170,7 +172,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, onProductsCha
 
         <div className="space-y-6">
           {activeTab === 'products' && (
-            <AdminProduk products={products} onProductsChange={onProductsChange} addLog={addLog} />
+            <AdminProduk products={products} onProductsChange={onProductsChange} currentUser={currentUser} addLog={addLog} />
           )}
 
           {activeTab === 'users' && (

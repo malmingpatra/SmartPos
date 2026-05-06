@@ -6,6 +6,7 @@ interface FormProdukProps {
   product: Product | null;
   onClose: () => void;
   onSave: (p: Product) => void;
+  onDelete?: (id: string) => void;
 }
 
 const generateUUID = () => {
@@ -18,7 +19,7 @@ const generateUUID = () => {
   });
 };
 
-const FormProduk: React.FC<FormProdukProps> = ({ product, onClose, onSave }) => {
+const FormProduk: React.FC<FormProdukProps> = ({ product, onClose, onSave, onDelete }) => {
   const [formData, setFormData] = useState<Product>(() => product || {
     id: generateUUID(),
     name: '',
@@ -66,9 +67,20 @@ const FormProduk: React.FC<FormProdukProps> = ({ product, onClose, onSave }) => 
           <input type="number" inputMode="numeric" className="w-full border p-2 rounded-lg" value={formData.stock === 0 ? '' : formData.stock} onChange={e => setFormData({ ...formData, stock: e.target.value ? Number(e.target.value) : 0 })} />
         </div>
       </div>
-      <div className="flex gap-3 pt-4">
-        <button type="button" onClick={onClose} className="flex-1 px-4 py-2 border rounded-lg">Batal</button>
-        <button type="submit" className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-bold">Simpan</button>
+      <div className="flex flex-col gap-3 pt-4">
+        <div className="flex gap-3">
+          <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-100 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
+          <button type="submit" className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-blue-100">Simpan</button>
+        </div>
+        {product && onDelete && (
+          <button 
+            type="button" 
+            onClick={() => onDelete(product.id)}
+            className="w-full py-3 bg-red-50 text-red-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-100"
+          >
+            <i className="fas fa-trash-alt mr-2"></i> Hapus Produk
+          </button>
+        )}
       </div>
     </form>
   );

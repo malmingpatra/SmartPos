@@ -8,9 +8,10 @@ interface FormMemberProps {
   isAdmin?: boolean;
   onClose: () => void;
   onSave: (c: Customer) => void;
+  onDelete?: (id: string) => void;
 }
 
-const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin = false, onClose, onSave }) => {
+const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin = false, onClose, onSave, onDelete }) => {
   const [formData, setFormData] = useState<Customer>(customer || {
     id: crypto.randomUUID(),
     name: '',
@@ -75,9 +76,20 @@ const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin =
           </div>
         )}
       </div>
-      <div className="flex gap-3 pt-6">
-        <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl">Batal</button>
-        <button type="submit" className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-black">SIMPAN</button>
+      <div className="flex flex-col gap-3 pt-6">
+        <div className="flex gap-3">
+          <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
+          <button type="submit" className="flex-1 px-4 py-3 bg-emerald-600 text-white rounded-xl font-black text-xs uppercase">SIMPAN</button>
+        </div>
+        {customer && onDelete && (
+          <button 
+            type="button" 
+            onClick={() => onDelete(customer.id)}
+            className="w-full py-3 bg-red-50 text-red-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all border border-red-100"
+          >
+            <i className="fas fa-trash-alt mr-2"></i> Hapus Member
+          </button>
+        )}
       </div>
     </form>
   );

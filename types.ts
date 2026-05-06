@@ -1,6 +1,8 @@
 
 export enum Role {
   ADMIN = 'Admin',
+  MANAGER = 'Manager',
+  GUDANG_MASTER = 'Gudang Master',
   KASIR = 'Kasir',
   SALES = 'Sales',
   GUDANG = 'Gudang'
@@ -10,12 +12,16 @@ export function normalizeRole(role: string | undefined | null): Role {
   if (!role) return Role.KASIR; // Default role
   const r = role.toLowerCase();
   if (r === 'admin') return Role.ADMIN;
+  if (r === 'manager') return Role.MANAGER;
+  if (r === 'gudang master') return Role.GUDANG_MASTER;
   if (r === 'kasir') return Role.KASIR;
   if (r === 'sales') return Role.SALES;
   if (r === 'gudang') return Role.GUDANG;
   
   // Also handle exact enum values if they differ from lowercase
   if (role === Role.ADMIN) return Role.ADMIN;
+  if (role === Role.MANAGER) return Role.MANAGER;
+  if (role === Role.GUDANG_MASTER) return Role.GUDANG_MASTER;
   if (role === Role.KASIR) return Role.KASIR;
   if (role === Role.SALES) return Role.SALES;
   if (role === Role.GUDANG) return Role.GUDANG;

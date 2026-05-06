@@ -1,15 +1,16 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Product } from '../types';
+import { Product, User, Role, normalizeRole } from '../types';
 import { supabaseService } from '../supabase';
 import FormProduk from './FormProduk';
 
 interface AdminProdukProps {
   products: Product[];
   onProductsChange: () => Promise<void> | void;
+  currentUser: User;
   addLog: (msg: string) => void;
 }
 
-const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect }: { p: Product, onEdit: (p: Product) => void, onDelete: (id: string) => void, selected: boolean, onSelect: (id: string, selected: boolean) => void }) => {
+const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect, showCheckbox }: { p: Product, onEdit: (p: Product) => void, onDelete: (id: string) => void, selected: boolean, onSelect: (id: string, selected: boolean) => void, showCheckbox: boolean }) => {
   const [isActive, setIsActive] = useState(false);
   const [canScroll, setCanScroll] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,12 +41,14 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect }: { p: Produ
       className={`transition-colors select-none ${selected ? 'bg-blue-50/50' : 'hover:bg-gray-50/50'}`}
     >
       <td className="px-1 py-4 w-10 text-center border-r border-gray-100 shrink-0">
-        <input 
-          type="checkbox" 
-          className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
-          checked={selected} 
-          onChange={(e) => onSelect(p.id, e.target.checked)} 
-        />
+        {showCheckbox && (
+          <input 
+            type="checkbox" 
+            className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
+            checked={selected} 
+            onChange={(e) => onSelect(p.id, e.target.checked)} 
+          />
+        )}
       </td>
       <td className="px-3 py-4">
         <div ref={containerRef} className="overflow-hidden">
@@ -88,7 +91,15 @@ const AdminProductRow = ({ p, onEdit, onDelete, selected, onSelect }: { p: Produ
   );
 };
 
-const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, addLog }) => {
+const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, currentUser, addLog }) => {
+  const userRole = normalizeRole(currentUser.role);
+  
+  // Roles with full bulk/checkbox access
+  const hasBulkAccess = userRole === Role.ADMIN || userRole === Role.MANAGER || userRole === Role.GUDANG_MASTER;
+  
+  const isGudang = userRole === Role.GUDANG;
+  const isKasirSales = userRole === Role.KASIR || userRole === Role.SALES;
+
   const [productPage, setProductPage] = useState(1);
   const itemsPerPage = 10;
   
@@ -224,7 +235,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
           </div>
         </div>
 
-        {selectedProducts.size > 0 && (
+        {hasBulkAccess && selectedProducts.size > 0 && (
           <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-white/95 backdrop-blur-xl p-1 rounded-xl border border-gray-100 shadow-[0_15px_40px_rgba(59,130,246,0.15)] z-[200] animate-in fade-in slide-in-from-right-5 duration-300">
             {/* Category Selection Dropdown */}
             <div className="relative group">
@@ -282,12 +293,14 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="px-1 py-4 w-10 text-center border-r border-gray-100 shrink-0">
-                     <input 
-                       type="checkbox" 
-                       className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
-                       checked={filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length} 
-                       onChange={(e) => handleSelectAll(e.target.checked)} 
-                     />
+                     {hasBulkAccess && (
+                       <input 
+                         type="checkbox" 
+                         className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer" 
+                         checked={filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length} 
+                         onChange={(e) => handleSelectAll(e.target.checked)} 
+                       />
+                     )}
                   </th>
                   <th className="px-3 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-left">Produk</th>
                   <th className="px-1 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center w-16 shrink-0">Stok</th>
@@ -303,6 +316,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
                     onDelete={handleDeleteProduct}
                     selected={selectedProducts.has(p.id)}
                     onSelect={handleSelect}
+                    showCheckbox={hasBulkAccess}
                   />
                 ))}
               </tbody>
@@ -340,6 +354,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, a
               key={editingProduct ? editingProduct.id : 'new'}
               product={editingProduct} 
               onClose={() => setIsFormOpen(false)} 
+              onDelete={(id) => { setIsFormOpen(false); handleDeleteProduct(id); }}
               onSave={async (p) => { 
                 try {
                   await supabaseService.saveProduct(p); 

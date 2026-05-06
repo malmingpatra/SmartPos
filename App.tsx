@@ -37,12 +37,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const [prods, ords] = await Promise.all([
-        supabaseService.getProducts(),
-        supabaseService.getOrders()
-      ]);
+      const prods = await supabaseService.getProducts();
       setProducts(prods);
-      setOrders(ords);
       setLoading(false);
     };
     loadData();
@@ -51,8 +47,10 @@ const App: React.FC = () => {
   useEffect(() => {
     if (user) {
       supabaseService.getCustomers(user).then(setCustomers);
+      supabaseService.getOrders(user).then(setOrders);
     } else {
       setCustomers([]);
+      setOrders([]);
     }
   }, [user]);
 
@@ -171,6 +169,7 @@ const App: React.FC = () => {
   };
 
   const isGudang = user && normalizeRole(user.role) === Role.GUDANG;
+  const isCartDisabled = user && (normalizeRole(user.role) === Role.GUDANG || normalizeRole(user.role) === Role.GUDANG_MASTER);
   const canViewCart = user && (normalizeRole(user.role) !== Role.GUDANG || isGudang);
   const canEditCart = user && normalizeRole(user.role) !== Role.GUDANG;
 
@@ -188,6 +187,8 @@ const App: React.FC = () => {
     }
 
     if (normalizeRole(user.role) === Role.ADMIN || 
+        normalizeRole(user.role) === Role.MANAGER ||
+        normalizeRole(user.role) === Role.GUDANG_MASTER ||
         normalizeRole(user.role) === Role.GUDANG ||
         normalizeRole(user.role) === Role.KASIR ||
         normalizeRole(user.role) === Role.SALES) {
@@ -345,7 +346,7 @@ const App: React.FC = () => {
                     customers={customers}
                     onSaveCustomer={handleSaveCustomer}
                     currentUser={user!}
-                    readOnly={isGudang || false}
+                    readOnly={isCartDisabled || false}
                     buyerName={buyerName}
                     setBuyerName={setBuyerName}
                     buyerPhone={buyerPhone}
@@ -385,7 +386,7 @@ const App: React.FC = () => {
                         if (tab.id === 'logout') {
                           handleLogout();
                         } else if (tab.id === 'cart_toggle') {
-                          if (isGudang) return;
+                          if (isCartDisabled) return;
                           setShowCart(!showCart);
                         } else {
                           setView(tab.id as any); 
@@ -394,7 +395,7 @@ const App: React.FC = () => {
                         }
                       }}
                       className={`relative flex-1 flex flex-col items-center justify-center h-full transition-all duration-300 isolate group ${
-                        tab.id === 'cart_toggle' && isGudang ? 'opacity-30 grayscale cursor-not-allowed' : 'active:scale-95'
+                        tab.id === 'cart_toggle' && isCartDisabled ? 'opacity-30 grayscale cursor-not-allowed' : 'active:scale-95'
                       }`}
                     >
                       {isActive && (

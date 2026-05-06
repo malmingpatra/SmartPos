@@ -167,7 +167,7 @@ const Katalog: React.FC<KatalogProps> = ({ products, onAddToCart, user }) => {
 
   const totalPages = Math.ceil(filtered.length / APP_CONFIG.PAGE_SIZE);
 
-  const isButtonDisabled = !user || normalizeRole(user.role) === Role.GUDANG;
+  const isButtonDisabled = !user || normalizeRole(user.role) === Role.GUDANG || normalizeRole(user.role) === Role.GUDANG_MASTER;
 
   return (
     <div className="space-y-3 md:space-y-4">

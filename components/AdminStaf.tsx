@@ -217,6 +217,8 @@ const AdminStaf: React.FC<AdminStafProps> = ({ users, onUsersChange, addLog }) =
                       <div className="mt-1">
                         <span className={`inline-block px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-tight border ${
                           u.role === Role.ADMIN ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                          u.role === Role.MANAGER ? 'bg-indigo-50 text-indigo-600 border-indigo-100' :
+                          u.role === Role.GUDANG_MASTER ? 'bg-orange-50 text-orange-600 border-orange-100' :
                           u.role === Role.KASIR ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
                           u.role === Role.SALES ? 'bg-blue-50 text-blue-600 border-blue-100' :
                           u.role === Role.GUDANG ? 'bg-amber-50 text-amber-600 border-amber-100' :

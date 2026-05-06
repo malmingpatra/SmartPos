@@ -13,6 +13,7 @@ interface AdminMemberProps {
 
 const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange, users, currentUser, addLog }) => {
   const userRole = normalizeRole(currentUser.role);
+  const isKasirSales = userRole === Role.KASIR || userRole === Role.SALES;
   
   const [customerPage, setCustomerPage] = useState(1);
   const itemsPerPage = 10;
@@ -131,7 +132,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               />
             </div>
             <div className="flex gap-3 w-full h-11">
-              {userRole === Role.ADMIN && (
+              {(userRole === Role.ADMIN || userRole === Role.MANAGER) && (
                 <div className="flex-[60] relative h-full">
                   <select 
                     className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-blue-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-blue-200 transition-all font-sans"
@@ -146,7 +147,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               )}
               <button 
                 onClick={() => { setEditingCustomer(null); setIsFormOpen(true); }} 
-                className={`${userRole === Role.ADMIN ? 'flex-[40]' : 'w-full'} bg-amber-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-amber-100 active:scale-95 transition-all`}
+                className={`${(userRole === Role.ADMIN || userRole === Role.MANAGER) ? 'flex-[40]' : 'w-full'} bg-amber-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-amber-100 active:scale-95 transition-all`}
               >
                 <i className="fas fa-user-plus"></i> <span className="truncate">Member</span>
               </button>
@@ -154,7 +155,8 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
           </div>
         </div>
 
-        {selectedCustomerIds.length > 0 && (
+        {/* Bulk Action Panel - Hide for Kasir/Sales */}
+        {!isKasirSales && selectedCustomerIds.length > 0 && (
           <div className="fixed bottom-32 right-4 flex flex-col gap-1 bg-white/95 backdrop-blur-xl p-1 rounded-xl border border-gray-100 shadow-[0_15px_40px_rgba(59,130,246,0.15)] z-[200] animate-in fade-in slide-in-from-right-5 duration-300">
             {/* Staff Selection Dropdown */}
             <div className="relative group">
@@ -212,7 +214,11 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
             <table className="w-full text-left table-fixed min-w-[360px]">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="px-4 md:px-6 py-4 w-12"><input type="checkbox" checked={filteredCustomers.length > 0 && selectedCustomerIds.length === filteredCustomers.length} onChange={handleToggleSelectAll} /></th>
+                  <th className="px-4 md:px-6 py-4 w-12">
+                    {!isKasirSales && (
+                      <input type="checkbox" checked={filteredCustomers.length > 0 && selectedCustomerIds.length === filteredCustomers.length} onChange={handleToggleSelectAll} />
+                    )}
+                  </th>
                   <th className="px-2 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-left w-[70%]">Nama</th>
                   <th className="px-4 md:px-6 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center w-[30%]">Aksi</th>
                 </tr>
@@ -220,7 +226,11 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               <tbody className="divide-y text-sm">
                 {filteredCustomers.slice((customerPage - 1) * itemsPerPage, customerPage * itemsPerPage).map(c => (
                   <tr key={c.id} className={`${selectedCustomerIds.includes(c.id) ? 'bg-blue-50/50' : ''} hover:bg-gray-50/50 transition-colors`}>
-                    <td className="px-4 md:px-6 py-4"><input type="checkbox" checked={selectedCustomerIds.includes(c.id)} onChange={() => handleToggleSelectOne(c.id)} /></td>
+                    <td className="px-4 md:px-6 py-4">
+                      {!isKasirSales && (
+                        <input type="checkbox" checked={selectedCustomerIds.includes(c.id)} onChange={() => handleToggleSelectOne(c.id)} />
+                      )}
+                    </td>
                     <td className="px-2 py-4 overflow-hidden text-left">
                       <span className="font-bold text-gray-800 block truncate">{c.name}</span>
                       <div className="mt-1 mb-1">
@@ -324,6 +334,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               users={users}
               isAdmin={normalizeRole(currentUser.role) === Role.ADMIN}
               onClose={() => setIsFormOpen(false)} 
+              onDelete={(id) => { setIsFormOpen(false); handleDeleteCustomer(id); }}
               onSave={async (c) => { 
                 try {
                   if (!editingCustomer && !c.created_by) {

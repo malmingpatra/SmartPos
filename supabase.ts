@@ -260,10 +260,12 @@ export const supabaseService = {
     
     // RBAC Filter Logic
     let filtered: Customer[] = [];
-    if (userRole === Role.ADMIN) {
+    if (userRole === Role.ADMIN || userRole === Role.MANAGER || userRole === Role.GUDANG_MASTER) {
       filtered = allCustomers;
     } else if (userRole === Role.SALES || userRole === Role.KASIR) {
       filtered = allCustomers.filter((c: Customer) => c.created_by === user.id);
+    } else if (userRole === Role.GUDANG) {
+      filtered = allCustomers; // Gudang usually can see members for history context
     } else {
       filtered = [];
     }
@@ -272,7 +274,7 @@ export const supabaseService = {
 
     try {
       let query = supabase.from('customers').select('*');
-      if (userRole !== Role.ADMIN) query = query.eq('created_by', user.id);
+      if (userRole !== Role.ADMIN && userRole !== Role.MANAGER && userRole !== Role.GUDANG_MASTER && userRole !== Role.GUDANG) query = query.eq('created_by', user.id);
 
       const { data, error } = await query;
       if (error) throw error;
@@ -403,15 +405,29 @@ export const supabaseService = {
     }
   },
 
-  getOrders: async (): Promise<Order[]> => {
+  getOrders: async (user: User | null): Promise<Order[]> => {
     if (!supabase) return getLocalCache('pos_orders') || [];
     try {
-      const { data, error } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+      let query = supabase.from('orders').select('*').order('created_at', { ascending: false });
+      
+      const userRole = user ? normalizeRole(user.role) : null;
+      if (user && userRole !== Role.ADMIN && userRole !== Role.MANAGER && userRole !== Role.GUDANG && userRole !== Role.GUDANG_MASTER) {
+        query = query.eq('user_id', user.id);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       updateLocalCache('pos_orders', data);
       return data as Order[];
     } catch (err) {
-      return getLocalCache('pos_orders') || [];
+      const cached = getLocalCache('pos_orders') || [];
+      if (user) {
+        const userRole = normalizeRole(user.role);
+        if (userRole !== Role.ADMIN && userRole !== Role.MANAGER && userRole !== Role.GUDANG && userRole !== Role.GUDANG_MASTER) {
+          return cached.filter((o: Order) => o.user_id === user.id);
+        }
+      }
+      return cached;
     }
   }
 };
