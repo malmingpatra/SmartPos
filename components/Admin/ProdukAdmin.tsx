@@ -110,6 +110,10 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
 
   const [confirmModal, setConfirmModal] = useState<{ show: boolean, type: 'single' | 'bulk', id?: string }>({ show: false, type: 'single' });
 
+  const [isBulkTextOpen, setIsBulkTextOpen] = useState(false);
+  const [bulkText, setBulkText] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
   const [bulkCategory, setBulkCategory] = useState('');
 
@@ -147,6 +151,69 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
   const handleBulkDelete = () => {
     if (selectedProducts.size === 0) return;
     setConfirmModal({ show: true, type: 'bulk' });
+  };
+
+  const handleBulkTextProcess = async () => {
+    if (!bulkText.trim()) return;
+    setIsProcessing(true);
+    const lines = bulkText.split('\n').filter(l => l.trim());
+    let success = 0;
+    let fail = 0;
+
+    for (const line of lines) {
+      // Clean brackets and split by comma
+      const cleanLine = line.trim().replace(/^\(|\)$/g, '');
+      const parts = cleanLine.split(',').map(s => s.trim());
+      
+      if (parts.length >= 2) {
+        const nameOrId = parts[0];
+        // Find product by name (case insensitive)
+        const product = products.find(p => 
+          p.name.toLowerCase() === nameOrId.toLowerCase() || 
+          p.id === nameOrId
+        );
+
+        if (product) {
+          const updated = { ...product };
+          
+          if (parts.length >= 3) {
+            // Format: Nama, Harga, Stok
+            updated.price = parseFloat(parts[1].replace(/[^0-9.]/g, '')) || product.price;
+            updated.stock = parseInt(parts[2].replace(/[^0-9]/g, '')) || product.stock;
+          } else {
+            // Format: Nama, Nilai (Smart Detection)
+            const val = parts[1].toLowerCase();
+            if (val.startsWith('h:')) {
+              updated.price = parseFloat(val.replace('h:', '').replace(/[^0-9.]/g, '')) || product.price;
+            } else if (val.startsWith('s:')) {
+              updated.stock = parseInt(val.replace('s:', '').replace(/[^0-9]/g, '')) || product.stock;
+            } else {
+              // Guess based on value
+              const num = parseFloat(val.replace(/[^0-9.]/g, ''));
+              if (!isNaN(num)) {
+                if (num >= 1000) updated.price = num;
+                else updated.stock = num;
+              }
+            }
+          }
+
+          try {
+            await supabaseService.saveProduct(updated);
+            success++;
+          } catch (e) {
+            fail++;
+          }
+        } else {
+          fail++;
+        }
+      }
+    }
+
+    onProductsChange();
+    setIsProcessing(false);
+    setIsBulkTextOpen(false);
+    setBulkText('');
+    addLog(`Update Massal: ${success} berhasil, ${fail} gagal`);
   };
 
   const filteredProducts = useMemo(() => {
@@ -212,7 +279,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
               />
             </div>
             <div className="flex gap-3 w-full h-11">
-              <div className="flex-[60] relative h-full">
+              <div className="flex-1 relative h-full">
                 <select 
                   className="w-full h-full pl-4 pr-10 bg-white border border-gray-100 rounded-xl appearance-none focus:outline-none focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
                   value={productFilterCategory}
@@ -225,12 +292,22 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
                 </select>
                 <i className="fas fa-chevron-down absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 text-[10px] pointer-events-none"></i>
               </div>
-              <button 
-                onClick={() => { setEditingProduct(null); setIsFormOpen(true); }} 
-                className="flex-[40] bg-orange-600 text-white h-full rounded-xl font-bold flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest shadow-md shadow-orange-100 active:scale-95 transition-all"
-              >
-                <i className="fas fa-plus"></i> <span className="truncate">Tambah</span>
-              </button>
+              <div className="flex shrink-0 gap-2">
+                <button 
+                  onClick={() => setIsBulkTextOpen(true)}
+                  className="w-11 bg-white border border-gray-200 text-orange-600 h-full rounded-xl font-bold flex items-center justify-center shadow-sm active:scale-95 transition-all"
+                  title="Update Massal via Teks"
+                >
+                  <i className="fas fa-file-import text-sm"></i>
+                </button>
+                <button 
+                  onClick={() => { setEditingProduct(null); setIsFormOpen(true); }} 
+                  className="w-[60px] bg-orange-600 text-white h-full rounded-xl font-bold flex items-center justify-center shadow-md shadow-orange-100 active:scale-95 transition-all"
+                  title="Tambah Produk Baru"
+                >
+                  <i className="fa-solid fa-circle-plus text-lg"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -347,6 +424,50 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
         )}
       </div>
 
+      {isBulkTextOpen && (
+        <div className="fixed inset-0 z-[12000] bg-black/70 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-[2rem] max-w-md w-full animate-in zoom-in duration-300 shadow-2xl overflow-hidden flex flex-col">
+            <div className="bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4 shrink-0">
+              <div className="w-11 h-11 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center shadow-sm border border-orange-100 shrink-0">
+                <i className="fas fa-file-invoice text-base"></i>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-[9px] font-black text-orange-600 uppercase tracking-widest leading-none mb-1">Batch Processing</h3>
+                <h4 className="text-xs font-black text-gray-800 uppercase tracking-tight truncate">Update Massal Teks</h4>
+              </div>
+            </div>
+
+            <div className="p-6">
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-4 leading-relaxed">
+                Format: (Nama, Harga, Stok) atau (Nama, h:Harga) atau (Nama, s:Stok). Satu produk per baris.
+              </p>
+              <textarea 
+                className="w-full h-48 bg-gray-50 border border-gray-100 rounded-2xl p-4 text-xs font-mono font-bold focus:outline-none focus:border-orange-400 transition-all shadow-inner"
+                placeholder={'(Milo, 15000, 50)\n(Kopi Latte, h:20000)\n(Teh Manis, s:100)'}
+                value={bulkText}
+                onChange={e => setBulkText(e.target.value)}
+              />
+              
+              <div className="mt-6 flex flex-col gap-2">
+                <button 
+                  onClick={handleBulkTextProcess}
+                  disabled={isProcessing || !bulkText.trim()}
+                  className="w-full py-3.5 bg-orange-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-orange-100 disabled:bg-gray-100 disabled:text-gray-300 transition-all active:scale-95"
+                >
+                  {isProcessing ? 'Memproses...' : 'Terapkan Perubahan'}
+                </button>
+                <button 
+                  onClick={() => { setIsBulkTextOpen(false); setBulkText(''); }}
+                  className="w-full py-3 rounded-xl text-gray-400 font-black text-[9px] uppercase tracking-widest hover:bg-gray-50 transition-all"
+                >
+                  Batal
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {isFormOpen && (
         <div className="fixed inset-0 z-[12000] bg-black/60 flex items-center justify-center p-4 backdrop-blur-[2px]">
           <div className="bg-white rounded-[2rem] max-w-[320px] w-full animate-in zoom-in duration-300 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
@@ -398,8 +519,8 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
                 : 'Data akan dihapus permanen dari sistem.'}
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setConfirmModal({ show: false, type: 'single' })} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-              <button onClick={processDelete} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-red-100">Ya, Hapus</button>
+              <button onClick={() => setConfirmModal({ show: false, type: 'single' })} className="flex-1 px-4 py-3.5 border border-gray-200 text-gray-400 font-black rounded-xl text-[10px] uppercase tracking-widest hover:bg-gray-50 transition-all active:scale-95">Batal</button>
+              <button onClick={processDelete} className="flex-1 px-4 py-3.5 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition-all">Ya, Hapus</button>
             </div>
           </div>
         </div>
