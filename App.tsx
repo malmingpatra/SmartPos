@@ -241,7 +241,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative print:h-auto print:overflow-visible print:static">
+    <div className="h-screen flex flex-col bg-[#F8FAFC] overflow-hidden relative print:block print:h-auto print:overflow-visible print:static">
       {/* 4. REFINED BOX GLASS HEADER */}
       <ContactLinksModal 
         isOpen={showContactLinks} 
@@ -266,7 +266,7 @@ const App: React.FC = () => {
                   </span>
                   <button 
                     onClick={() => {
-                      setNewPin(user.pin);
+                      setNewPin('');
                       setIsChangePinOpen(true);
                     }}
                     className="px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-tight bg-gray-50 text-gray-800 border border-gray-200 hover:bg-white active:scale-95 transition-all shadow-sm leading-none"
@@ -314,7 +314,7 @@ const App: React.FC = () => {
       <main 
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-auto p-4 pt-20 scroll-smooth relative no-print"
+        className={`flex-1 overflow-auto p-4 pt-20 scroll-smooth relative print:overflow-visible print:p-0 print:block ${showReceipt ? 'no-print' : ''}`}
       >
         <AnimatePresence mode="wait">
           <motion.div 

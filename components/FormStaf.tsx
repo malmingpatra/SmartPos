@@ -54,22 +54,22 @@ const FormStaf: React.FC<FormStafProps> = ({ user, onClose, onSave }) => {
       <div className="space-y-4">
         <div>
           <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Nama Lengkap</label>
-          <input required type="text" placeholder="Contoh: Budi Santoso" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+          <input required type="text" placeholder="Contoh: Budi Santoso" className="w-full h-[52px] px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none transition font-bold" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
         </div>
         
         <div>
           <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Username</label>
-          <input required type="text" placeholder="budi123" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} />
+          <input required type="text" placeholder="budi123" className="w-full h-[52px] px-4 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none transition font-bold" value={formData.username} onChange={e => setFormData({ ...formData, username: e.target.value.toLowerCase().replace(/\s/g, '') })} />
         </div>
 
         <div className="flex gap-4">
           <div className="w-[60%]">
             <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">PIN (3-12 Digit)</label>
-            <input required type="password" maxLength={12} inputMode="numeric" placeholder="••••" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl tracking-[0.3em] text-center font-black focus:outline-none transition" value={formData.pin} onChange={e => setFormData({ ...formData, pin: e.target.value.replace(/\D/g, '') })} />
+            <input required type="password" maxLength={12} inputMode="numeric" placeholder="••••" className="w-full h-[52px] bg-gray-50 border border-gray-200 px-4 rounded-xl tracking-[0.3em] text-center font-black focus:outline-none transition" value={formData.pin} onChange={e => setFormData({ ...formData, pin: e.target.value.replace(/\D/g, '') })} />
           </div>
           <div className="flex-1">
             <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Role</label>
-            <select className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value as Role })}>
+            <select className="w-full h-[52px] bg-gray-50 border border-gray-200 px-4 py-0 rounded-xl focus:outline-none transition font-bold" value={formData.role} onChange={e => setFormData({ ...formData, role: e.target.value as Role })}>
               {Object.values(Role).map(role => <option key={role} value={role}>{role}</option>)}
             </select>
           </div>
