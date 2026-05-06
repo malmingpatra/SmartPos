@@ -126,7 +126,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               <input 
                 type="text" 
                 placeholder="Cari member..." 
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
                 value={customerSearch} 
                 onChange={(e) => { setCustomerSearch(e.target.value); setCustomerPage(1); }} 
               />
@@ -135,7 +135,7 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
               {(userRole === Role.ADMIN || userRole === Role.MANAGER) && (
                 <div className="flex-[60] relative h-full">
                   <select 
-                    className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all font-sans"
+                    className="w-full h-full pl-4 pr-10 bg-white border border-gray-100 rounded-xl appearance-none focus:outline-none focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all font-sans"
                     value={customerFilterUser}
                     onChange={(e) => { setCustomerFilterUser(e.target.value); setCustomerPage(1); }}
                   >
@@ -277,18 +277,43 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
 
       {showTransferModal && (
         <div className="fixed inset-0 z-[10000] bg-black/70 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] max-w-sm w-full p-8 animate-in zoom-in duration-300 shadow-2xl">
-            <h2 className="text-xl font-black text-gray-800 mb-6 tracking-tight">Pindahkan Member</h2>
-            <div className="space-y-4 mb-8">
-              <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Pilih Petugas Baru</label>
-              <select className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none font-bold text-sm" value={targetOwnerId} onChange={(e) => setTargetOwnerId(e.target.value)}>
-                <option value="">Pilih Staff...</option>
-                {users.map(u => <option key={u.id} value={u.id}>{u.name} ({u.role})</option>)}
-              </select>
+          <div className="bg-white rounded-[2rem] max-w-[320px] w-full animate-in zoom-in duration-300 shadow-2xl overflow-hidden flex flex-col">
+            <div className="bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4 shrink-0">
+              <div className="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shadow-sm border border-indigo-100 shrink-0">
+                <i className="fas fa-exchange-alt text-base"></i>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-[9px] font-black text-indigo-600 uppercase tracking-widest leading-none mb-1">Manajemen</h3>
+                <h4 className="text-xs font-black text-gray-800 uppercase tracking-tight truncate">Pindah Member</h4>
+              </div>
             </div>
-            <div className="flex gap-3">
-              <button onClick={() => setShowTransferModal(false)} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-              <button onClick={onBulkTransferSubmit} disabled={!targetOwnerId || isProcessing} className="flex-1 px-4 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-orange-100">Proses</button>
+            
+            <div className="p-6 pt-5">
+              <div className="space-y-4 mb-6">
+                <div className="bg-indigo-50/30 p-3 rounded-xl border border-indigo-50 mb-2">
+                  <p className="text-[10px] font-bold text-indigo-600 text-center uppercase tracking-wide">Pindahkan {selectedCustomerIds.length} data terpilih</p>
+                </div>
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1 leading-none">Pilih Petugas Baru</label>
+                <select className="w-full bg-white border border-gray-200 p-3 rounded-xl focus:outline-none font-bold text-sm" value={targetOwnerId} onChange={(e) => setTargetOwnerId(e.target.value)}>
+                  <option value="">Pilih Staff...</option>
+                  {users.map(u => <option key={u.id} value={u.id}>{u.name} ({u.role})</option>)}
+                </select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={onBulkTransferSubmit} 
+                  disabled={!targetOwnerId || isProcessing} 
+                  className="w-full py-3.5 bg-orange-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-orange-100 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none transition-all active:scale-95"
+                >
+                  {isProcessing ? 'Proses...' : 'Pindahkan Data'}
+                </button>
+                <button 
+                  onClick={() => setShowTransferModal(false)} 
+                  className="w-full py-3 rounded-xl text-gray-400 font-black text-[9px] uppercase tracking-widest hover:bg-gray-50 transition-all active:scale-95"
+                >
+                  Batalkan
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -296,15 +321,25 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
 
       {confirmModal.show && (
         <div className="fixed inset-0 z-[11000] bg-black/70 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] max-w-sm w-full p-8 animate-in zoom-in duration-300">
-            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto">
-              <i className="fas fa-exclamation-triangle"></i>
+          <div className="bg-white rounded-[2rem] max-w-[280px] w-full p-8 animate-in zoom-in duration-300">
+            <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl mb-6 mx-auto shadow-sm border border-red-50">
+              <i className="fas fa-trash-alt"></i>
             </div>
-            <h2 className="text-xl font-black text-center text-gray-800 mb-2 tracking-tight">Konfirmasi Hapus</h2>
-            <p className="text-center text-gray-400 text-xs font-bold uppercase tracking-widest mb-8">Data akan dihapus permanen dari sistem.</p>
-            <div className="flex gap-3">
-              <button onClick={() => setConfirmModal({ show: false, id: '' })} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-              <button onClick={processDelete} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-red-100">Ya, Hapus</button>
+            <h2 className="text-lg font-black text-center text-gray-800 mb-2 tracking-tight uppercase">Hapus Data?</h2>
+            <p className="text-center text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-8 leading-relaxed">Data ini akan dihapus permanen.</p>
+            <div className="flex flex-col gap-2">
+              <button 
+                onClick={processDelete} 
+                className="w-full py-3.5 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition-all"
+              >
+                Hapus Sekarang
+              </button>
+              <button 
+                onClick={() => setConfirmModal({ show: false, id: '' })} 
+                className="w-full py-3 rounded-xl text-gray-400 font-black text-[9px] uppercase tracking-widest hover:bg-gray-50 transition-all"
+              >
+                Batal
+              </button>
             </div>
           </div>
         </div>
@@ -312,45 +347,69 @@ const AdminMember: React.FC<AdminMemberProps> = ({ customers, onCustomersChange,
 
       {showBulkDeleteConfirm && (
         <div className="fixed inset-0 z-[11000] bg-black/70 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] max-w-sm w-full p-8 animate-in zoom-in duration-300">
-            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-2xl mb-6 mx-auto">
-              <i className="fas fa-exclamation-triangle"></i>
+          <div className="bg-white rounded-[2rem] max-w-[280px] w-full p-8 animate-in zoom-in duration-300 text-center">
+            <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center text-xl mb-6 mx-auto shadow-sm border border-red-50">
+              <i className="fas fa-exclamation-circle"></i>
             </div>
-            <h2 className="text-xl font-black text-center text-gray-800 mb-2 tracking-tight">Hapus {selectedCustomerIds.length} Member?</h2>
-            <p className="text-center text-gray-400 text-xs font-bold uppercase tracking-widest mb-8">Data akan dihapus permanen dari sistem.</p>
-            <div className="flex gap-3">
-              <button onClick={() => setShowBulkDeleteConfirm(false)} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase cursor-pointer">Batal</button>
-              <button onClick={onBulkDeleteProcess} disabled={isProcessing} className="flex-1 px-4 py-3 bg-red-600 text-white rounded-xl font-black text-xs uppercase shadow-lg shadow-red-100 cursor-pointer">{isProcessing ? 'Proses...' : 'Ya, Hapus'}</button>
+            <h2 className="text-lg font-black text-gray-800 mb-2 tracking-tight uppercase leading-tight">Hapus {selectedCustomerIds.length} Member?</h2>
+            <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest mb-8 leading-relaxed">Penghapusan massal tidak dapat dibatalkan.</p>
+            <div className="flex flex-col gap-2">
+              <button 
+                onClick={onBulkDeleteProcess} 
+                disabled={isProcessing} 
+                className="w-full py-3.5 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition-all"
+              >
+                {isProcessing ? 'Proses...' : 'Ya, Hapus Semua'}
+              </button>
+              <button 
+                onClick={() => setShowBulkDeleteConfirm(false)} 
+                className="w-full py-3 rounded-xl text-gray-400 font-black text-[9px] uppercase tracking-widest hover:bg-gray-50 transition-all"
+              >
+                Batal
+              </button>
             </div>
           </div>
         </div>
       )}
 
       {isFormOpen && (
-        <div className="fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center p-4 backdrop-blur-[2px]">
-          <div className="bg-white rounded-[2rem] max-w-md w-full p-8 animate-in zoom-in duration-300 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <FormMember 
-              customer={editingCustomer} 
-              users={users}
-              isAdmin={normalizeRole(currentUser.role) === Role.ADMIN}
-              onClose={() => setIsFormOpen(false)} 
-              onDelete={(id) => { setIsFormOpen(false); handleDeleteCustomer(id); }}
-              onSave={async (c) => { 
-                try {
-                  if (!editingCustomer && !c.created_by) {
-                    c.created_by = currentUser.id;
-                    c.created_by_role = normalizeRole(currentUser.role);
+        <div className="fixed inset-0 z-[12000] bg-black/60 flex items-center justify-center p-4 backdrop-blur-[2px]">
+          <div className="bg-white rounded-[2rem] max-w-[340px] w-full animate-in zoom-in duration-300 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4 shrink-0">
+              <div className="w-11 h-11 bg-indigo-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100 shrink-0">
+                <i className={`fas ${editingCustomer ? 'fa-user-tag' : 'fa-user-plus'} text-base`}></i>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-[9px] font-black text-indigo-600 uppercase tracking-widest leading-none mb-1">{editingCustomer ? 'Edit Member' : 'Member Baru'}</h3>
+                <h4 className="text-xs font-black text-gray-800 uppercase tracking-tight truncate">
+                  {editingCustomer ? editingCustomer.name : 'Data Pelanggan'}
+                </h4>
+              </div>
+            </div>
+            <div className="p-6 pt-5 bg-white overflow-y-auto flex-1">
+              <FormMember 
+                customer={editingCustomer} 
+                users={users}
+                isAdmin={normalizeRole(currentUser.role) === Role.ADMIN}
+                onClose={() => setIsFormOpen(false)} 
+                onDelete={(id) => { setIsFormOpen(false); handleDeleteCustomer(id); }}
+                onSave={async (c) => { 
+                  try {
+                    if (!editingCustomer && !c.created_by) {
+                      c.created_by = currentUser.id;
+                      c.created_by_role = normalizeRole(currentUser.role);
+                    }
+                    await supabaseService.saveCustomer(c); 
+                    await onCustomersChange(); 
+                    setIsFormOpen(false); 
+                    addLog(`Berhasil ${editingCustomer ? 'mengubah' : 'menambah'} member`);
+                  } catch (err: any) {
+                    addLog(`Gagal ${editingCustomer ? 'mengubah' : 'menambah'} member`);
+                    console.error(err);
                   }
-                  await supabaseService.saveCustomer(c); 
-                  await onCustomersChange(); 
-                  setIsFormOpen(false); 
-                  addLog(`Berhasil ${editingCustomer ? 'mengubah' : 'menambah'} member`);
-                } catch (err: any) {
-                  addLog(`Gagal ${editingCustomer ? 'mengubah' : 'menambah'} member`);
-                  console.error(err);
-                }
-              }} 
-            />
+                }} 
+              />
+            </div>
           </div>
         </div>
       )}

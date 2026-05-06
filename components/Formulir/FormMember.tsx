@@ -39,24 +39,23 @@ const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin =
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-black text-gray-800 mb-6 tracking-tight">{customer ? 'Edit Member' : 'Daftar Member Baru'}</h2>
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="space-y-4">
         <div>
-          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Nama Member</label>
-          <input required type="text" placeholder="Masukkan nama pelanggan..." className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1 leading-none">Nama Member</label>
+          <input required type="text" placeholder="Masukkan nama pelanggan..." className="w-full bg-white border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:border-orange-400 transition font-bold text-sm" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
         </div>
         <div>
-          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Nomor HP</label>
-          <input required type="tel" placeholder="081234567xxx" className="w-full bg-gray-50 border border-gray-200 p-3 rounded-xl focus:outline-none transition font-bold" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })} />
+          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1 leading-none">Nomor HP</label>
+          <input required type="tel" placeholder="081234567xxx" className="w-full bg-white border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:border-orange-400 transition font-bold text-sm" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })} />
         </div>
         
         {/* Fitur Pindah Kepemilikan untuk Admin */}
         {isAdmin && (
-          <div>
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Petugas Penanggung Jawab</label>
+          <div className="bg-orange-50/30 p-3 rounded-2xl border border-orange-50">
+            <label className="block text-[9px] font-black text-orange-600 uppercase tracking-widest mb-2 ml-1 leading-none">Petugas Terkait (Admin Only)</label>
             <select 
-              className="w-full bg-orange-50/50 border border-orange-100 p-3 rounded-xl focus:outline-none transition font-bold text-orange-800"
+              className="w-full bg-white border border-gray-200 px-3 py-2.5 rounded-xl focus:outline-none focus:border-orange-400 transition font-bold text-gray-800 text-xs shadow-sm"
               value={formData.created_by}
               onChange={(e) => handleOwnerChange(e.target.value)}
             >
@@ -65,21 +64,25 @@ const FormMember: React.FC<FormMemberProps> = ({ customer, users = [], isAdmin =
                 <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
               ))}
             </select>
-            <p className="text-[8px] text-gray-400 mt-1 ml-1">* Hanya Admin yang dapat memindahkan kepemilikan data member.</p>
           </div>
         )}
 
         {customer && (
-          <div className="pt-2">
-            <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5 ml-1">Total Belanja (Rp)</label>
-            <input disabled type="text" className="w-full bg-gray-100 border border-gray-200 p-3 rounded-xl font-bold opacity-60" value={formData.total_spent.toLocaleString()} />
+          <div className="bg-gray-50/50 p-3 rounded-2xl border border-gray-100 flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none mb-1">Total Belanja</span>
+              <span className="text-sm font-black text-emerald-600 tracking-tight">Rp {formData.total_spent.toLocaleString()}</span>
+            </div>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-500 flex items-center justify-center">
+              <i className="fas fa-wallet text-xs"></i>
+            </div>
           </div>
         )}
       </div>
       <div className="flex flex-col gap-3 pt-6">
         <div className="flex gap-3">
-          <button type="button" onClick={onClose} className="flex-1 px-4 py-3 border border-gray-200 text-gray-500 font-bold rounded-xl text-xs uppercase">Batal</button>
-          <button type="submit" className="flex-1 px-4 py-3 bg-orange-600 text-white rounded-xl font-black text-xs uppercase">SIMPAN</button>
+          <button type="button" onClick={onClose} className="flex-1 px-4 py-3.5 border border-gray-200 text-gray-400 font-black rounded-xl text-[10px] uppercase tracking-widest active:scale-95 transition-all">Batal</button>
+          <button type="submit" className="flex-[2] px-4 py-3.5 bg-orange-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-orange-100 active:scale-95 transition-all">SIMPAN</button>
         </div>
         {customer && onDelete && (
           <button 

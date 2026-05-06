@@ -319,10 +319,10 @@ const App: React.FC = () => {
         <AnimatePresence mode="wait">
           <motion.div 
             key={view}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
             className="max-w-7xl mx-auto w-full pt-1"
           >
             {view === 'catalog' && (
@@ -407,63 +407,67 @@ const App: React.FC = () => {
       {/* Modal Ganti PIN */}
       <AnimatePresence>
         {isChangePinOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[12000] flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsChangePinOpen(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative bg-white w-full max-w-sm rounded-[2rem] p-8 shadow-2xl border border-gray-100 overflow-hidden"
+              className="relative bg-white w-full max-w-[280px] rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden flex flex-col"
             >
-              
-              <div className="mb-6 text-center">
-                <div className="w-14 h-14 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-orange-100">
-                  <i className="fas fa-key text-xl"></i>
+              <div className="bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4 shrink-0">
+                <div className="w-11 h-11 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center shadow-sm border border-orange-100 shrink-0">
+                  <i className="fas fa-key text-base"></i>
                 </div>
-                <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">Ganti PIN</h3>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Masukkan PIN baru Anda</p>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="text-[9px] font-black text-orange-600 uppercase tracking-widest leading-none mb-1">Sekuritas</h3>
+                  <h4 className="text-xs font-black text-gray-800 uppercase tracking-tight truncate">Ganti PIN</h4>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 text-center">
-                  <input 
-                    type="text" 
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={newPin}
-                    onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
-                    placeholder="Min 3 Digit"
-                    className="bg-transparent text-2xl text-center w-full focus:outline-none font-black tracking-[0.3em] text-orange-600 placeholder:text-gray-200"
-                    maxLength={12}
-                    autoFocus
-                  />
-                </div>
+              <div className="p-6 pt-5">
+                <div className="space-y-5">
+                  <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 text-center">
+                    <label className="block text-[8px] font-black text-gray-400 uppercase tracking-widest mb-2 leading-none">Masukkan PIN Baru</label>
+                    <input 
+                      type="text" 
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      value={newPin}
+                      onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                      placeholder="000 000 000 000"
+                      className="bg-transparent text-xl text-center w-full focus:outline-none font-mono font-black tracking-widest text-orange-600 placeholder:text-gray-200"
+                      maxLength={12}
+                      autoFocus
+                    />
+                  </div>
 
-                <div className="flex gap-3">
-                  <button 
-                    onClick={() => setIsChangePinOpen(false)}
-                    className="flex-1 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest text-gray-400 border border-gray-100 hover:bg-gray-50 transition-all active:scale-95"
-                  >
-                    Batal
-                  </button>
-                  <button 
-                    disabled={newPin.length < 3 || isUpdatingPin}
-                    onClick={handleUpdatePin}
-                    className="flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest bg-orange-600 text-white shadow-lg shadow-orange-200 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none hover:bg-orange-700 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    {isUpdatingPin ? (
-                       <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    ) : (
-                      <i className="fas fa-save"></i>
-                    )}
-                    Simpan PIN
-                  </button>
+                  <div className="flex flex-col gap-2">
+                    <button 
+                      disabled={newPin.length < 3 || isUpdatingPin}
+                      onClick={handleUpdatePin}
+                      className="w-full py-3.5 rounded-xl font-black text-[10px] uppercase tracking-widest bg-orange-600 text-white shadow-lg shadow-orange-100 disabled:bg-gray-100 disabled:text-gray-300 disabled:shadow-none hover:bg-orange-700 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    >
+                      {isUpdatingPin ? (
+                         <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      ) : (
+                        <i className="fas fa-check-circle mr-1"></i>
+                      )}
+                      Simpan PIN
+                    </button>
+                    <button 
+                      onClick={() => setIsChangePinOpen(false)}
+                      className="w-full py-3 rounded-xl font-black text-[9px] uppercase tracking-widest text-gray-400 hover:bg-gray-50 transition-all active:scale-95 border border-transparent"
+                    >
+                      Batal
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>

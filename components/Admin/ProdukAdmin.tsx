@@ -206,7 +206,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
               <input 
                 type="text" 
                 placeholder="Cari di inventaris..." 
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl focus:bg-white focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
+                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-100 rounded-xl focus:border-orange-400 focus:ring-4 focus:ring-orange-50/50 outline-none text-xs font-bold transition-all placeholder:text-gray-300 shadow-sm" 
                 value={productSearch} 
                 onChange={(e) => { setProductSearch(e.target.value); setProductPage(1); }} 
               />
@@ -214,7 +214,7 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
             <div className="flex gap-3 w-full h-11">
               <div className="flex-[60] relative h-full">
                 <select 
-                  className="w-full h-full pl-4 pr-10 bg-gray-50 border border-gray-100 rounded-xl appearance-none focus:outline-none focus:bg-white focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
+                  className="w-full h-full pl-4 pr-10 bg-white border border-gray-100 rounded-xl appearance-none focus:outline-none focus:border-orange-400 text-xs font-bold text-gray-700 shadow-sm cursor-pointer hover:border-orange-200 transition-all"
                   value={productFilterCategory}
                   onChange={(e) => { setProductFilterCategory(e.target.value); setProductPage(1); }}
                 >
@@ -348,24 +348,37 @@ const AdminProduk: React.FC<AdminProdukProps> = ({ products, onProductsChange, c
       </div>
 
       {isFormOpen && (
-        <div className="fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center p-4 backdrop-blur-[2px]">
-          <div className="bg-white rounded-[2rem] max-w-md w-full p-8 animate-in zoom-in duration-300 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <FormProduk 
-              key={editingProduct ? editingProduct.id : 'new'}
-              product={editingProduct} 
-              onClose={() => setIsFormOpen(false)} 
-              onDelete={(id) => { setIsFormOpen(false); handleDeleteProduct(id); }}
-              onSave={async (p) => { 
-                try {
-                  await supabaseService.saveProduct(p); 
-                  onProductsChange(); 
-                  setIsFormOpen(false); 
-                  addLog(`Berhasil ${editingProduct ? 'mengubah' : 'menambah'} produk`);
-                } catch (err: any) {
-                  addLog(`Gagal ${editingProduct ? 'mengubah' : 'menambah'} produk`);
-                }
-              }} 
-            />
+        <div className="fixed inset-0 z-[12000] bg-black/60 flex items-center justify-center p-4 backdrop-blur-[2px]">
+          <div className="bg-white rounded-[2rem] max-w-[320px] w-full animate-in zoom-in duration-300 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="bg-white px-6 py-5 border-b border-gray-100 flex items-center gap-4 shrink-0">
+              <div className="w-11 h-11 bg-orange-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-orange-100 shrink-0">
+                <i className={`fas ${editingProduct ? 'fa-edit' : 'fa-plus'} text-base`}></i>
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="text-[9px] font-black text-orange-600 uppercase tracking-widest leading-none mb-1">{editingProduct ? 'Edit Produk' : 'Produk Baru'}</h3>
+                <h4 className="text-xs font-black text-gray-800 uppercase tracking-tight truncate">
+                  {editingProduct ? editingProduct.name : 'Stok Inventaris'}
+                </h4>
+              </div>
+            </div>
+            <div className="p-6 pt-5 bg-white overflow-y-auto flex-1">
+              <FormProduk 
+                key={editingProduct ? editingProduct.id : 'new'}
+                product={editingProduct} 
+                onClose={() => setIsFormOpen(false)} 
+                onDelete={(id) => { setIsFormOpen(false); handleDeleteProduct(id); }}
+                onSave={async (p) => { 
+                  try {
+                    await supabaseService.saveProduct(p); 
+                    onProductsChange(); 
+                    setIsFormOpen(false); 
+                    addLog(`Berhasil ${editingProduct ? 'mengubah' : 'menambah'} produk`);
+                  } catch (err: any) {
+                    addLog(`Gagal ${editingProduct ? 'mengubah' : 'menambah'} produk`);
+                  }
+                }} 
+              />
+            </div>
           </div>
         </div>
       )}
